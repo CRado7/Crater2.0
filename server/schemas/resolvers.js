@@ -43,30 +43,30 @@ const resolvers = {
     getAllApparel: async () => {
       return await Apparel.find();
     },
-      // General stats for the site
-      generalStats: async () => {
-        const stats = await siteStats.findOne();
-        const salesData = await Sales.aggregate([
-          { $group: { _id: { month: "$month", itemType: "$itemType" }, total: { $sum: "$amount" } } },
-        ]);
-  
-        return { stats, salesData };
-      },
-      // Snowboard-specific stats
-      snowboardStats: async () => {
-        const mostViewedBoard = await Snowboard.findOne().sort({ views: -1 }).limit(1);
-        const salesData = await Sales.find({ itemType: "snowboard" });
-  
-        return { mostViewedBoard, salesData };
-      },
-      // Apparel-specific stats
-      apparelStats: async () => {
-        const mostViewedApparel = await Apparel.findOne().sort({ views: -1 }).limit(1);
-        const salesData = await Sales.find({ itemType: "apparel" });
-  
-        return { mostViewedApparel, salesData };
-      },
+    // General stats for the site
+    generalStats: async () => {
+      const stats = await siteStats.findOne();
+      const salesData = await Sales.aggregate([
+        { $group: { _id: { month: "$month", itemType: "$itemType" }, total: { $sum: "$amount" } } },
+      ]);
+
+      return { stats, salesData };
     },
+    // Snowboard-specific stats
+    snowboardStats: async () => {
+      const mostViewedBoard = await Snowboard.findOne().sort({ views: -1 }).limit(1);
+      const salesData = await Sales.find({ itemType: "snowboard" });
+
+      return { mostViewedBoard, salesData };
+    },
+    // Apparel-specific stats
+    apparelStats: async () => {
+      const mostViewedApparel = await Apparel.findOne().sort({ views: -1 }).limit(1);
+      const salesData = await Sales.find({ itemType: "apparel" });
+
+      return { mostViewedApparel, salesData };
+    },
+  },
   Mutation: {
     // Create a new user
     createUser: async (_, { username, password }) => {
@@ -76,15 +76,53 @@ const resolvers = {
     },
     // Create a new snowboard
     createSnowboard: async (_, { picture, name, shape, sizes, flex, boardConstruction, price }) => {
-      const snowboard = new Snowboard({ picture, name, shape, sizes, flex, boardConstruction, price });
+      const snowboard = new Snowboard({
+        picture,
+        name,
+        shape,
+        sizes: sizes.map(({ size, inStock }) => ({ size, inStock })),  // Map sizes to include inStock for each size
+        flex,
+        boardConstruction,
+        price,
+      });
       await snowboard.save();
       return snowboard;
     },
     // Create a new apparel item
-    createApparel: async (_, { pictures, name, style, size, price }) => {
-      const apparel = new Apparel({ pictures, name, style, size, price });
+    createApparel: async (_, { pictures, name, style, sizes, price }) => {
+      const apparel = new Apparel({
+        pictures,
+        name,
+        style,
+        sizes: sizes.map(({ size, inStock }) => ({ size, inStock })),  // Map sizes to include inStock for each size
+        price,
+      });
       await apparel.save();
       return apparel;
+    },
+    deleteSnowboard: async (_, { id }) => {
+      try {
+        const deletedSnowboard = await Snowboard.findByIdAndDelete(id);
+        if (!deletedSnowboard) {
+          throw new Error('Snowboard not found');
+        }
+        return deletedSnowboard; // Return the deleted snowboard object
+      } catch (err) {
+        throw new Error(`Error deleting snowboard: ${err.message}`);
+      }
+    },
+
+    // Delete an apparel item
+    deleteApparel: async (_, { id }) => {
+      try {
+        const deletedApparel = await Apparel.findByIdAndDelete(id);
+        if (!deletedApparel) {
+          throw new Error('Apparel item not found');
+        }
+        return deletedApparel; // Return the deleted apparel item
+      } catch (err) {
+        throw new Error(`Error deleting apparel item: ${err.message}`);
+      }
     },
     // Login mutation to authenticate user and return JWT token
     login: async (parent, { username, password }) => {

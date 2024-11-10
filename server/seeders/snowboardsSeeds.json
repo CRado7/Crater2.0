@@ -1,0 +1,66 @@
+[
+  {
+    "picture": [
+      "https://example.com/snowboard1.jpg"
+    ],
+    "name": "Freestyle Pro",
+    "shape": "twin",
+    "sizes": [
+      {
+        "size": "S",
+        "inStock": 10
+      },
+      {
+        "size": "M",
+        "inStock": 20
+      },
+      {
+        "size": "L",
+        "inStock": 15
+      }
+    ],
+    "flex": "medium",
+    "boardConstruction": "Wood core with carbon reinforcement",
+    "price": 499.99
+  },
+  {
+    "picture": [
+      "https://example.com/snowboard2.jpg"
+    ],
+    "name": "All-Mountain X",
+    "shape": "directional",
+    "sizes": [
+      {
+        "size": "M",
+        "inStock": 30
+      },
+      {
+        "size": "L",
+        "inStock": 25
+      }
+    ],
+    "flex": "stiff",
+    "boardConstruction": "Fiberglass with a bamboo core",
+    "price": 599.99
+  },
+  {
+    "picture": [
+      "https://example.com/snowboard3.jpg"
+    ],
+    "name": "Powder Master",
+    "shape": "directional",
+    "sizes": [
+      {
+        "size": "L",
+        "inStock": 10
+      },
+      {
+        "size": "XL",
+        "inStock": 5
+      }
+    ],
+    "flex": "soft",
+    "boardConstruction": "Lightweight wood core with special powder coating",
+    "price": 649.99
+  }
+]

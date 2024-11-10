@@ -1,0 +1,75 @@
+[
+    {
+      "name": "T-shirt 1",
+      "price": 19.99,
+      "pictures": [
+        "https://example.com/image1.jpg",
+        "https://example.com/image2.jpg"
+      ],
+      "style": "T-shirt",
+      "sizes": [
+        {
+          "size": "S",
+          "inStock": 50
+        },
+        {
+          "size": "M",
+          "inStock": 100
+        },
+        {
+          "size": "L",
+          "inStock": 75
+        },
+        {
+          "size": "XL",
+          "inStock": 30
+        }
+      ]
+    },
+    {
+      "name": "Hoodie 1",
+      "price": 39.99,
+      "pictures": [
+        "https://example.com/image3.jpg",
+        "https://example.com/image4.jpg"
+      ],
+      "style": "Hoodie",
+      "sizes": [
+        {
+          "size": "S",
+          "inStock": 40
+        },
+        {
+          "size": "M",
+          "inStock": 80
+        },
+        {
+          "size": "L",
+          "inStock": 60
+        }
+      ]
+    },
+    {
+      "name": "Hoodie 2",
+      "price": 39.99,
+      "pictures": [
+        "https://example.com/image5.jpg"
+      ],
+      "style": "Hoodie",
+      "sizes": [
+        {
+          "size": "S",
+          "inStock": 30
+        },
+        {
+          "size": "M",
+          "inStock": 50
+        },
+        {
+          "size": "L",
+          "inStock": 40
+        }
+      ]
+    }
+  ]
+  

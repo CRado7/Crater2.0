@@ -45,13 +45,17 @@ export const GET_ALL_SNOWBOARDS = gql`
       picture
       name
       shape
-      sizes
+      sizes {
+        size
+        inStock
+      }
       flex
       boardConstruction
       price
     }
   }
 `;
+
 
 // Query to get a single apparel item by ID
 export const GET_APPAREL = gql`
@@ -75,8 +79,11 @@ export const GET_ALL_APPAREL = gql`
       pictures
       name
       style
-      size
       price
+      sizes {
+        size
+        inStock
+      }
     }
   }
 `;

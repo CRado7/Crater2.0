@@ -1,4 +1,3 @@
-// mutations.js
 import { gql } from '@apollo/client';
 
 // Mutation to create a new user
@@ -24,8 +23,6 @@ export const LOGIN = gql`
   }
 `;
 
-
-
 // Mutation to logout a user
 export const LOGOUT = gql`
   mutation logout {
@@ -33,15 +30,34 @@ export const LOGOUT = gql`
   }
 `;
 
-// Mutation to create a new snowboard
+// Mutation to create a new snowboard with the `SnowboardSizeInput` input type
 export const CREATE_SNOWBOARD = gql`
-  mutation CreateSnowboard($picture: String!, $name: String!, $shape: String!, $sizes: [String!]!, $flex: String!, $boardConstruction: String!) {
-    createSnowboard(picture: $picture, name: $name, shape: $shape, sizes: $sizes, flex: $flex, boardConstruction: $boardConstruction) {
+  mutation CreateSnowboard(
+    $picture: [String!],
+    $name: String!,
+    $shape: String!,
+    $sizes: [SnowboardSizeInput!]!,
+    $flex: String!,
+    $boardConstruction: String!,
+    $price: Float!
+  ) {
+    createSnowboard(
+      picture: $picture,
+      name: $name,
+      shape: $shape,
+      sizes: $sizes,
+      flex: $flex,
+      boardConstruction: $boardConstruction,
+      price: $price
+    ) {
       _id
       picture
       name
       shape
-      sizes
+      sizes {
+        size
+        inStock
+      }
       flex
       boardConstruction
       price
@@ -49,16 +65,52 @@ export const CREATE_SNOWBOARD = gql`
   }
 `;
 
-// Mutation to create a new apparel item
+// Mutation to create a new apparel item with the `ApparelSizeInput` input type
 export const CREATE_APPAREL = gql`
-  mutation CreateApparel($pictures: [String!]!, $style: String!, $size: String!) {
-    createApparel(pictures: $pictures, style: $style, size: $size) {
+  mutation CreateApparel(
+    $pictures: [String!]!,
+    $name: String!,
+    $style: String!,
+    $sizes: [ApparelSizeInput!]!,
+    $price: Float!
+  ) {
+    createApparel(
+      pictures: $pictures,
+      name: $name,
+      style: $style,
+      sizes: $sizes,
+      price: $price
+    ) {
       _id
       pictures
       name
       style
-      size
+      sizes {
+        size
+        inStock
+      }
       price
     }
   }
 `;
+
+export const DELETE_SNOWBOARD = gql`
+  mutation DeleteSnowboard($id: ID!) {
+    deleteSnowboard(id: $id) {
+      _id
+      name
+      picture
+    }
+  }
+`;
+
+export const DELETE_APPAREL = gql`
+  mutation DeleteApparel($id: ID!) {
+    deleteApparel(id: $id) {
+      _id
+      name
+      picture
+    }
+  }
+`;
+

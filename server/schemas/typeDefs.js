@@ -7,16 +7,26 @@ const typeDefs = gql`
     password: String
   }
 
+  type SnowboardSize {
+    size: String!
+    inStock: Int!
+  }
+
   type Snowboard {
     _id: ID
-    picture: String!
+    picture: [String!]!
     name: String!
     shape: String!
-    sizes: [String!]!
+    sizes: [SnowboardSize!]!
     flex: String!
     boardConstruction: String!
     price: Float!
     views: Int
+  }
+
+  type ApparelSize {
+    size: String!
+    inStock: Int!
   }
 
   type Apparel {
@@ -24,7 +34,7 @@ const typeDefs = gql`
     pictures: [String!]!
     name: String!
     style: String!
-    size: String!
+    sizes: [ApparelSize!]! # Updated to support multiple sizes with individual stock values
     price: Float!
     views: Int
   }
@@ -84,12 +94,14 @@ const typeDefs = gql`
     createUser(username: String!, password: String!): User!
     login(username: String!, password: String!): Auth
     logout: String!
+    deleteSnowboard(id: ID!): Snowboard
+    deleteApparel(id: ID!): Apparel
 
     createSnowboard(
-      picture: String!, 
+      picture: [String!], 
       name: String!, 
       shape: String!, 
-      sizes: [String!]!, 
+      sizes: [SnowboardSizeInput!]!, 
       flex: String!, 
       boardConstruction: String!, 
       price: Float!
@@ -99,10 +111,21 @@ const typeDefs = gql`
       pictures: [String!]!,
       name: String!,
       style: String!, 
-      size: String!, 
+      sizes: [ApparelSizeInput!]!, 
       price: Float!
     ): Apparel!
   }
+
+
+    input SnowboardSizeInput {
+      size: String!
+      inStock: Int!
+    }
+
+    input ApparelSizeInput {
+      size: String!
+      inStock: Int!
+    }
 `;
 
 module.exports = typeDefs;

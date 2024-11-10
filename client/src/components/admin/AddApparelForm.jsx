@@ -1,23 +1,36 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_APPAREL } from '../../utils/mutations'; // Import the CREATE_APPAREL mutation
+import { CREATE_APPAREL } from '../../utils/mutations'; // Import the mutation
 import React from 'react';
 
 const AddApparelForm = ({ closeForm }) => {
   const [newApparel, setNewApparel] = useState({
     pictures: [],
     style: '',
-    size: '',
+    sizes: [], // Array of size-stock pairs
   });
 
   const [createApparel] = useMutation(CREATE_APPAREL);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewApparel({
-      ...newApparel,
-      [name]: value
-    });
+
+    if (name.startsWith('size_')) {
+      const index = name.split('_')[1]; // Extract the index of the size-stock pair
+      const updatedSizes = [...newApparel.sizes];
+      updatedSizes[index].size = value; // Update the size at that index
+      setNewApparel({ ...newApparel, sizes: updatedSizes });
+    } else if (name.startsWith('stock_')) {
+      const index = name.split('_')[1]; // Extract the index of the size-stock pair
+      const updatedSizes = [...newApparel.sizes];
+      updatedSizes[index].stock = value; // Update the stock at that index
+      setNewApparel({ ...newApparel, sizes: updatedSizes });
+    } else {
+      setNewApparel({
+        ...newApparel,
+        [name]: value
+      });
+    }
   };
 
   const handlePicturesChange = (e) => {
@@ -28,6 +41,18 @@ const AddApparelForm = ({ closeForm }) => {
     });
   };
 
+  const handleAddSizeStock = () => {
+    setNewApparel({
+      ...newApparel,
+      sizes: [...newApparel.sizes, { size: '', stock: '' }]
+    });
+  };
+
+  const handleRemoveSizeStock = (index) => {
+    const updatedSizes = newApparel.sizes.filter((_, i) => i !== index);
+    setNewApparel({ ...newApparel, sizes: updatedSizes });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,7 +60,7 @@ const AddApparelForm = ({ closeForm }) => {
         variables: {
           pictures: newApparel.pictures, // Assuming pictures is an array of URLs (or paths to uploaded images)
           style: newApparel.style,
-          size: newApparel.size,
+          sizes: newApparel.sizes, // Pass the sizes array as it is
         }
       });
       // Close the form after successful creation
@@ -43,7 +68,7 @@ const AddApparelForm = ({ closeForm }) => {
       setNewApparel({
         pictures: [],
         style: '',
-        size: '',
+        sizes: [],
       });
     } catch (error) {
       console.error("Error creating apparel:", error);
@@ -73,28 +98,43 @@ const AddApparelForm = ({ closeForm }) => {
             onChange={handleChange}
           />
         </div>
-        <div>
-          <label>Size:</label>
-          <input
-            type="text"
-            name="size"
-            value={newApparel.size}
-            onChange={handleChange}
-          />
-        </div>
+
+        {/* Dynamically render size and stock input fields */}
+        {newApparel.sizes.length > 0 && (
+          <div>
+            <h4>Sizes and Stock:</h4>
+            {newApparel.sizes.map((sizeStock, index) => (
+              <div key={index} className="size-stock-pair">
+                <select
+                  name={`size_${index}`}
+                  value={sizeStock.size}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Size</option>
+                  <option value="S">Small</option>
+                  <option value="M">Medium</option>
+                  <option value="L">Large</option>
+                  <option value="XL">Extra Large</option>
+                </select>
+                <input
+                  type="number"
+                  name={`stock_${index}`}
+                  value={sizeStock.stock}
+                  onChange={handleChange}
+                  placeholder="Stock quantity"
+                />
+                <button type="button" onClick={() => handleRemoveSizeStock(index)}>
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddSizeStock}>Add Size/Stock</button>
+          </div>
+        )}
+
         <button type="submit">Submit</button>
         <button type="button" onClick={closeForm}>Cancel</button>
       </form>
-
-      {/* Optional: Display selected pictures as thumbnails */}
-      <div className="preview-images">
-        {newApparel.pictures.length > 0 && (
-          <h4>Preview:</h4>
-        )}
-        {newApparel.pictures.map((picture, index) => (
-          <img key={index} src={picture} alt={`Preview ${index}`} width="100" height="100" />
-        ))}
-      </div>
     </div>
   );
 };

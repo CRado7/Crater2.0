@@ -11,9 +11,9 @@ const AdminSnowboardCard = () => {
   return (
     <div className="snowboard-cards-container">
       {data.getAllSnowboards.map((snowboard) => (
-        <div key={snowboard.id} className="snowboard-card">
+        <div key={snowboard._id} className="snowboard-card">
           <img
-            src={snowboard.picture}
+            src={snowboard.picture[0]}
             alt={snowboard.name}
             className="snowboard-picture"
           />
@@ -23,8 +23,8 @@ const AdminSnowboardCard = () => {
             <ul>
               {snowboard.sizes.map((size, index) => (
                 <li key={index} className="size-item">
-                  <span className="size-stock">{snowboard.stock ? snowboard.stock[size] : 'N/A'}</span> {/* Stock value per size */}
-                  <span>{size}</span>
+                  <span className="size-stock">{size.inStock ? size.inStock : 'N/A'}</span> {/* Stock value per size */}
+                  <span>{size.size}</span>
                 </li>
               ))}
             </ul>
@@ -36,4 +36,3 @@ const AdminSnowboardCard = () => {
 };
 
 export default AdminSnowboardCard;
-

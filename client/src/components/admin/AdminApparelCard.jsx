@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path to your queries file
 import React from 'react';
 
-const AdminApparelCard = () => {
+const AdminApparelCard = React.memo(() => {
   const { loading, error, data } = useQuery(GET_ALL_APPAREL);
 
   if (loading) return <p>Loading Apparel...</p>;
@@ -11,9 +11,9 @@ const AdminApparelCard = () => {
   return (
     <div className="apparel-cards-container">
       {data.getAllApparel.map((apparel) => (
-        <div key={apparel.id} className="apparel-card">
+        <div key={apparel._id} className="apparel-card">
           <img
-            src={apparel.picture}
+            src={apparel.pictures[0]} // Assuming the first picture is the main image
             alt={apparel.name}
             className="apparel-picture"
           />
@@ -23,10 +23,8 @@ const AdminApparelCard = () => {
             <ul>
               {apparel.sizes.map((size, index) => (
                 <li key={index} className="size-item">
-                  <span className="size-stock">
-                    {apparel.stock ? apparel.stock[size] : 'N/A'} {/* Stock value per size */}
-                  </span>
-                  <span>{size}</span>
+                  <span className="size-stock">{size.inStock ? size.inStock : 'N/A'}</span> {/* Stock value per size */}
+                  <span>{size.size}</span>
                 </li>
               ))}
             </ul>
@@ -35,6 +33,7 @@ const AdminApparelCard = () => {
       ))}
     </div>
   );
-};
+});
 
 export default AdminApparelCard;
+

@@ -8,21 +8,56 @@ const AddSnowboardForm = ({ closeForm }) => {
     picture: '',
     name: '',
     shape: '',
-    sizes: [],
+    sizes: [], // This will now be an array of objects, each having a size and stock
     flex: '',
     boardConstruction: ''
   });
 
   const [createSnowboard] = useMutation(CREATE_SNOWBOARD);
 
+  // Assuming these are your possible enum values from the schema
+  const shapes = ['Freestyle', 'All-Mountain', 'Powder', 'Freeride']; // Example values
+  const flexTypes = ['Soft', 'Medium', 'Stiff']; // Example values
+  const boardConstructions = ['Wood', 'Fiberglass', 'Carbon', 'Aluminum']; // Example values
+
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'sizes') {
+      const selectedSizes = value.split(',').map(size => size.trim());
+      setNewBoard({
+        ...newBoard,
+        sizes: selectedSizes.map(size => ({ size, stock: '' })) // Initialize stock for each size
+      });
+    } else if (name.includes('stock')) {
+      const [action, index] = name.split('_');
+      const updatedSizes = [...newBoard.sizes];
+      updatedSizes[index].stock = value; // Update stock for specific size
+      setNewBoard({ ...newBoard, sizes: updatedSizes });
+    } else {
+      setNewBoard({
+        ...newBoard,
+        [name]: value
+      });
+    }
+  };
+
+  // Add a new size and stock pair
+  const handleAddSizeStock = () => {
     setNewBoard({
       ...newBoard,
-      [name]: value
+      sizes: [...newBoard.sizes, { size: '', stock: '' }]
     });
   };
 
+  // Remove a size and stock pair
+  const handleRemoveSizeStock = (index) => {
+    const updatedSizes = newBoard.sizes.filter((_, i) => i !== index);
+    setNewBoard({ ...newBoard, sizes: updatedSizes });
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -31,9 +66,13 @@ const AddSnowboardForm = ({ closeForm }) => {
           picture: newBoard.picture,
           name: newBoard.name,
           shape: newBoard.shape,
-          sizes: newBoard.sizes.split(','),
+          sizes: newBoard.sizes.map(item => item.size), // Only pass sizes
           flex: newBoard.flex,
-          boardConstruction: newBoard.boardConstruction
+          boardConstruction: newBoard.boardConstruction,
+          stock: newBoard.sizes.reduce((acc, item) => {
+            acc[item.size] = item.stock; // Map sizes to stock values
+            return acc;
+          }, {}) // Convert sizes and stock into a key-value pair for stock
         }
       });
       // Close the form after successful creation
@@ -75,40 +114,73 @@ const AddSnowboardForm = ({ closeForm }) => {
         </div>
         <div>
           <label>Shape:</label>
-          <input
-            type="text"
+          <select
             name="shape"
             value={newBoard.shape}
             onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label>Sizes (comma separated):</label>
-          <input
-            type="text"
-            name="sizes"
-            value={newBoard.sizes}
-            onChange={handleChange}
-          />
+          >
+            <option value="">Select Shape</option>
+            {shapes.map((shape, index) => (
+              <option key={index} value={shape}>{shape}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label>Flex:</label>
-          <input
-            type="text"
+          <select
             name="flex"
             value={newBoard.flex}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select Flex</option>
+            {flexTypes.map((flex, index) => (
+              <option key={index} value={flex}>{flex}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label>Board Construction:</label>
-          <input
-            type="text"
+          <select
             name="boardConstruction"
             value={newBoard.boardConstruction}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select Board Construction</option>
+            {boardConstructions.map((construction, index) => (
+              <option key={index} value={construction}>{construction}</option>
+            ))}
+          </select>
         </div>
+
+        {/* Dynamically render size and stock input fields */}
+        {newBoard.sizes.length > 0 && (
+          <div>
+            <h4>Sizes and Stock:</h4>
+            {newBoard.sizes.map((sizeStock, index) => (
+              <div key={index} className="size-stock-pair">
+                <input
+                  type="text"
+                  name={`size_${index}`}
+                  value={sizeStock.size}
+                  onChange={e => handleChange(e)}
+                  placeholder="Enter size"
+                />
+                <input
+                  type="number"
+                  name={`stock_${index}`}
+                  value={sizeStock.stock}
+                  onChange={e => handleChange(e)}
+                  placeholder="Stock quantity"
+                />
+                <button type="button" onClick={() => handleRemoveSizeStock(index)}>
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddSizeStock}>Add Size/Stock</button>
+          </div>
+        )}
+
         <button type="submit">Submit</button>
         <button type="button" onClick={closeForm}>Cancel</button>
       </form>
