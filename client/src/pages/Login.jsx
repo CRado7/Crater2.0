@@ -16,25 +16,27 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
+    console.log("Starting handleLogin");  // Logs start of function
     console.log("Username:", username);
     console.log("Password:", password);
   
     try {
       const { data } = await login({
-        variables: { username: "Crater", password: "Lakewood8484" },
+        variables: { username, password },
       });
       
-      console.log('Login mutation response:', data);
+      console.log('Login mutation response data:', data);  // Logs after mutation is called
   
       if (data?.login?.token) {
-        AuthService.login(data.login.token); // Save the token to localStorage
-        navigate('/dashboard');              // Redirect to the dashboard
+        console.log('Token received:', data.login.token);
+        AuthService.login(data.login.token);
+        navigate('/dashboard');
       } else {
         console.warn('No token returned from login mutation');
       }
     } catch (err) {
-      console.error('Error during login mutation:', err);
+      console.error('Error during login mutation:', err);  // Logs error details
       if (err.networkError) {
         console.error('Network error details:', err.networkError);
       }
@@ -45,12 +47,6 @@ const Login = () => {
     }
   };
   
-
-  // If there's an error from the mutation, display it
-  if (error) {
-    console.error('GraphQL login error:', error);
-    alert('Error logging in. Please try again.');
-  }
 
   return (
     <form onSubmit={handleLogin}>

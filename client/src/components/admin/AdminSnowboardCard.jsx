@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GET_ALL_SNOWBOARDS } from '../../utils/queries'; // Adjust path as needed
+import React from 'react';
 
 const AdminSnowboardCard = () => {
   const { loading, error, data } = useQuery(GET_ALL_SNOWBOARDS);

@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path to your queries file
+import React from 'react';
 
 const AdminApparelCard = () => {
   const { loading, error, data } = useQuery(GET_ALL_APPAREL);

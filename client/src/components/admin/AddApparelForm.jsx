@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_APPAREL } from '../../utils/mutations'; // Import the CREATE_APPAREL mutation
+import React from 'react';
 
 const AddApparelForm = ({ closeForm }) => {
   const [newApparel, setNewApparel] = useState({

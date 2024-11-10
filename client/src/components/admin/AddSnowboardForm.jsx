@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_SNOWBOARD } from '../../utils/mutations'; // Import the mutation
+import React from 'react';
 
 const AddSnowboardForm = ({ closeForm }) => {
   const [newBoard, setNewBoard] = useState({
