@@ -94,9 +94,7 @@ const typeDefs = gql`
     createUser(username: String!, password: String!): User!
     login(username: String!, password: String!): Auth
     logout: String!
-    deleteSnowboard(id: ID!): Snowboard
-    deleteApparel(id: ID!): Apparel
-
+    
     createSnowboard(
       picture: [String!], 
       name: String!, 
@@ -105,16 +103,22 @@ const typeDefs = gql`
       flex: String!, 
       boardConstruction: String!, 
       price: Float!
-    ): Snowboard!
+      ): Snowboard!
+      
+      createApparel(
+        pictures: [String!]!,
+        name: String!,
+        style: String!, 
+        sizes: [ApparelSizeInput!]!, 
+        price: Float!
+        ): Apparel!
+        
+        updateSnowboard(id: ID!, input: [SnowboardSizeInput!]!): Snowboard
+        updateApparel(id: ID!, input: [ApparelSizeInput!]!): Apparel
 
-    createApparel(
-      pictures: [String!]!,
-      name: String!,
-      style: String!, 
-      sizes: [ApparelSizeInput!]!, 
-      price: Float!
-    ): Apparel!
-  }
+        deleteSnowboard(id: ID!): Snowboard
+        deleteApparel(id: ID!): Apparel
+      }
 
 
     input SnowboardSizeInput {

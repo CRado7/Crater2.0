@@ -100,6 +100,54 @@ const resolvers = {
       await apparel.save();
       return apparel;
     },
+    // Update a snowboard
+        async updateSnowboard(_, { id, input }) {
+          try {
+            const snowboard = await Snowboard.findById(id);
+    
+            if (!snowboard) {
+              throw new Error("Snowboard not found");
+            }
+    
+            // Iterate over the input array to update each size's inStock value
+            input.forEach(({ size, inStock }) => {
+              const sizeToUpdate = snowboard.sizes.find((s) => s.size === size);
+              if (sizeToUpdate) {
+                sizeToUpdate.inStock = inStock;
+              }
+            });
+    
+            // Save the updated snowboard document
+            await snowboard.save();
+            return snowboard;
+          } catch (error) {
+            throw new Error(`Error updating snowboard: ${error.message}`);
+          }
+        },
+    // Update an apparel item
+    updateApparel: async (_, { id, input }) => {
+      try {
+        const apparel = await Apparel.findById(id);
+        if (!apparel) {
+          throw new Error("Apparel item not found.");
+        }
+    
+        // Update each size based on input
+        input.forEach(({ size, inStock }) => {
+          const sizeToUpdate = apparel.sizes.find(s => s.size === size);
+          if (sizeToUpdate) {
+            sizeToUpdate.inStock = inStock;
+          }
+        });
+    
+        await apparel.save();
+        return apparel;
+      } catch (error) {
+        console.error("Error updating apparel item:", error);
+        throw new ApolloError("Error updating apparel item: " + error.message);
+      }
+    },
+    // Delete a snowboard
     deleteSnowboard: async (_, { id }) => {
       try {
         const deletedSnowboard = await Snowboard.findByIdAndDelete(id);

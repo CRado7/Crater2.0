@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_APPAREL } from '../../utils/mutations'; // Import the mutation
+import { CREATE_APPAREL } from '../../../utils/mutations'; // Import the mutation
 import React from 'react';
 
 const AddApparelForm = ({ closeForm }) => {

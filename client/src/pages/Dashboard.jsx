@@ -6,8 +6,8 @@ import AuthService from '../utils/auth';
 import { GET_GENERAL_STATS, GET_SNOWBOARD_STATS, GET_APPAREL_STATS } from '../utils/queries'; // Import your queries
 import AdminSnowboardCard from '../components/admin/AdminSnowboardCard'; // Import your components
 import AdminApparelCard from '../components/admin/AdminApparelCard';
-import AddSnowboardForm from '../components/admin/AddSnowboardForm';
-import AddApparelForm from '../components/admin/AddApparelForm';
+import AddSnowboardForm from '../components/admin/add/AddSnowboardForm';
+import AddApparelForm from '../components/admin/add/AddApparelForm';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();

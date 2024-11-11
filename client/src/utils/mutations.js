@@ -94,6 +94,42 @@ export const CREATE_APPAREL = gql`
   }
 `;
 
+// Mutation to update a snowboard
+export const UPDATE_SNOWBOARD = gql`
+  mutation UpdateSnowboard($id: ID!, $input: [SnowboardSizeInput!]!) {
+    updateSnowboard(id: $id, input: $input) {
+      _id
+      picture
+      name
+      shape
+      sizes {
+        size
+        inStock
+      }
+      flex
+      boardConstruction
+      price
+    }
+  }
+`;
+
+// Mutation to update an apparel item
+export const UPDATE_APPAREL = gql`
+  mutation UpdateApparel($id: ID!, $input: [ApparelSizeInput!]!) {
+    updateApparel(id: $id, input: $input) {
+      _id
+      pictures
+      name
+      style
+      sizes {
+        size
+        inStock
+      }
+      price
+    }
+  }
+`;
+
 export const DELETE_SNOWBOARD = gql`
   mutation DeleteSnowboard($id: ID!) {
     deleteSnowboard(id: $id) {
