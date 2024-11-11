@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_ALL_SNOWBOARDS } from '../../utils/queries'; // Adjust path as needed
+import { DELETE_SNOWBOARD } from '../../utils/mutations'; // Adjust path as needed
 import DeleteSnowboardForm from '../admin/delete/DeleteSnowboardForm'; // Adjust path as needed
 import UpdateSnowboardForm from '../admin/update/UpdateSnowboardForm'; // Adjust path as needed
 
@@ -9,8 +10,27 @@ const AdminSnowboardCard = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(null); // Track which snowboard to delete
   const [showUpdatePopup, setShowUpdatePopup] = useState(null); // Track which snowboard to update
 
+  const [deleteSnowboard] = useMutation(DELETE_SNOWBOARD, {
+    refetchQueries: [{ query: GET_ALL_SNOWBOARDS }], // Refetch data after deletion
+    onCompleted: () => {
+      console.log("Snowboard deleted successfully");
+      setShowDeletePopup(null); // Close the popup
+    },
+    onError: (error) => {
+      console.error("Error deleting snowboard:", error);
+    },
+  });
+
   if (loading) return <p>Loading Snowboards...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const handleDelete = async () => {
+    try {
+      await deleteSnowboard({ variables: { id: showDeletePopup._id } });
+    } catch (error) {
+      console.error("Error deleting snowboard:", error);
+    }
+  };
 
   return (
     <div className="snowboard-cards-container">
@@ -44,10 +64,7 @@ const AdminSnowboardCard = () => {
       {showDeletePopup && (
         <DeleteSnowboardForm
           itemName={showDeletePopup.name}
-          onDelete={() => {
-            // Implement your delete functionality here
-            setShowDeletePopup(null); // Close popup after deletion
-          }}
+          onDelete={handleDelete}
           onClose={() => setShowDeletePopup(null)}
         />
       )}

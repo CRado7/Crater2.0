@@ -145,7 +145,7 @@ export const DELETE_APPAREL = gql`
     deleteApparel(id: $id) {
       _id
       name
-      picture
+      pictures
     }
   }
 `;

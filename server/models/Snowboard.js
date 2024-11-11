@@ -15,7 +15,7 @@ const snowboardSchema = new mongoose.Schema(
     shape: {
       type: String,
       required: true,
-      enum: ['directional', 'twin', 'directional-twin'], // Allowed shapes
+      enum: ['twin', 'directional-twin', 'directional', 'directional-powder'], // Allowed shapes
       default: 'twin',
     },
     sizes: [
@@ -40,7 +40,8 @@ const snowboardSchema = new mongoose.Schema(
     boardConstruction: {
       type: String,
       required: true,
-      trim: true, // To remove leading and trailing spaces
+      enum: ['traditional', 'hybrid', 'rocker', 'camber'], // Allowed board constructions
+      default: 'traditional',
     },
     price: {
       type: Number,

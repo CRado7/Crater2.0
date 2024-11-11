@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path to your queries file
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path as needed
+import { DELETE_APPAREL } from '../../utils/mutations'; // Adjust path as needed
 import DeleteApparelForm from '../admin/delete/DeleteApparelForm'; // Adjust path as needed
 import UpdateApparelForm from '../admin/update/UpdateApparelForm'; // Adjust path as needed
 
@@ -9,8 +10,28 @@ const AdminApparelCard = React.memo(() => {
   const [showDeletePopup, setShowDeletePopup] = useState(null); // Track which item to delete
   const [showUpdatePopup, setShowUpdatePopup] = useState(null); // Track which item to update
 
+  // Set up DELETE_APPAREL mutation
+  const [deleteApparel] = useMutation(DELETE_APPAREL, {
+    refetchQueries: [{ query: GET_ALL_APPAREL }], // Refetch apparel after deletion
+    onCompleted: () => {
+      console.log("Apparel item deleted successfully");
+      setShowDeletePopup(null); // Close the delete popup
+    },
+    onError: (error) => {
+      console.error("Error deleting apparel:", error);
+    },
+  });
+
   if (loading) return <p>Loading Apparel...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const handleDelete = async () => {
+    try {
+      await deleteApparel({ variables: { id: showDeletePopup._id } });
+    } catch (error) {
+      console.error("Error deleting apparel:", error);
+    }
+  };
 
   return (
     <div className="apparel-cards-container">
@@ -44,10 +65,7 @@ const AdminApparelCard = React.memo(() => {
       {showDeletePopup && (
         <DeleteApparelForm
           itemName={showDeletePopup.name}
-          onDelete={() => {
-            // Implement your delete functionality here
-            setShowDeletePopup(null); // Close popup after deletion
-          }}
+          onDelete={handleDelete} // Call delete function
           onClose={() => setShowDeletePopup(null)}
         />
       )}

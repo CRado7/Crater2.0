@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-const DeletePopup = ({ itemName, onDelete, onClose }) => {
+const DeleteApparelForm = ({ itemName, onDelete, onClose }) => {
   const [confirmText, setConfirmText] = useState('');
 
   const handleDelete = () => {
     if (confirmText === itemName) {
       onDelete(); // Execute the deletion
+      setConfirmText(''); // Clear input field after deletion
       onClose(); // Close the popup after deletion
     }
   };
@@ -34,4 +35,4 @@ const DeletePopup = ({ itemName, onDelete, onClose }) => {
   );
 };
 
-export default DeletePopup;
+export default DeleteApparelForm;

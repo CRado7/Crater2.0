@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_APPAREL } from '../../../utils/mutations'; // Import the mutation
+import { CREATE_APPAREL } from '../../../utils/mutations';
 import React from 'react';
 
 const AddApparelForm = ({ closeForm }) => {
   const [newApparel, setNewApparel] = useState({
     pictures: [],
+    name: '',
     style: '',
-    sizes: [], // Array of size-stock pairs
+    sizes: [],
+    price: '',
   });
 
   const [createApparel] = useMutation(CREATE_APPAREL);
@@ -16,14 +18,14 @@ const AddApparelForm = ({ closeForm }) => {
     const { name, value } = e.target;
 
     if (name.startsWith('size_')) {
-      const index = name.split('_')[1]; // Extract the index of the size-stock pair
+      const index = parseInt(name.split('_')[1], 10);
       const updatedSizes = [...newApparel.sizes];
-      updatedSizes[index].size = value; // Update the size at that index
+      updatedSizes[index] = { ...updatedSizes[index], size: value };
       setNewApparel({ ...newApparel, sizes: updatedSizes });
     } else if (name.startsWith('stock_')) {
-      const index = name.split('_')[1]; // Extract the index of the size-stock pair
+      const index = parseInt(name.split('_')[1], 10);
       const updatedSizes = [...newApparel.sizes];
-      updatedSizes[index].stock = value; // Update the stock at that index
+      updatedSizes[index] = { ...updatedSizes[index], inStock: parseInt(value, 10) };
       setNewApparel({ ...newApparel, sizes: updatedSizes });
     } else {
       setNewApparel({
@@ -37,14 +39,14 @@ const AddApparelForm = ({ closeForm }) => {
     const files = Array.from(e.target.files);
     setNewApparel({
       ...newApparel,
-      pictures: files.map((file) => URL.createObjectURL(file)) // Generate local object URLs for preview
+      pictures: files.map((file) => URL.createObjectURL(file))
     });
   };
 
   const handleAddSizeStock = () => {
     setNewApparel({
       ...newApparel,
-      sizes: [...newApparel.sizes, { size: '', stock: '' }]
+      sizes: [...newApparel.sizes, { size: '', inStock: 0 }]
     });
   };
 
@@ -58,17 +60,20 @@ const AddApparelForm = ({ closeForm }) => {
     try {
       await createApparel({
         variables: {
-          pictures: newApparel.pictures, // Assuming pictures is an array of URLs (or paths to uploaded images)
+          pictures: newApparel.pictures,
+          name: newApparel.name,
           style: newApparel.style,
-          sizes: newApparel.sizes, // Pass the sizes array as it is
+          sizes: newApparel.sizes,
+          price: parseFloat(newApparel.price),
         }
       });
-      // Close the form after successful creation
       closeForm();
       setNewApparel({
         pictures: [],
+        name: '',
         style: '',
         sizes: [],
+        price: '',
       });
     } catch (error) {
       console.error("Error creating apparel:", error);
@@ -80,7 +85,7 @@ const AddApparelForm = ({ closeForm }) => {
       <h2>Add New Apparel</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Picture(s) (Upload multiple files):</label>
+          <label>Pictures (Upload multiple files):</label>
           <input
             type="file"
             name="pictures"
@@ -90,47 +95,68 @@ const AddApparelForm = ({ closeForm }) => {
           />
         </div>
         <div>
-          <label>Style:</label>
+          <label>Name:</label>
           <input
             type="text"
-            name="style"
-            value={newApparel.style}
+            name="name"
+            value={newApparel.name}
             onChange={handleChange}
           />
         </div>
+        <div>
+          <label>Style:</label>
+          <select
+            name="style"
+            value={newApparel.style}
+            onChange={handleChange}
+          >
+            <option value="">Select Style</option>
+            <option value="Hoodie">Hoodie</option>
+            <option value="T-Shirt">T-Shirt</option>
+          </select>
+        </div>
+        <div>
+          <label>Price:</label>
+          <input
+            type="number"
+            name="price"
+            value={newApparel.price}
+            onChange={handleChange}
+            placeholder="Enter price"
+          />
+        </div>
 
-        {/* Dynamically render size and stock input fields */}
-        {newApparel.sizes.length > 0 && (
-          <div>
-            <h4>Sizes and Stock:</h4>
-            {newApparel.sizes.map((sizeStock, index) => (
-              <div key={index} className="size-stock-pair">
-                <select
-                  name={`size_${index}`}
-                  value={sizeStock.size}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Size</option>
-                  <option value="S">Small</option>
-                  <option value="M">Medium</option>
-                  <option value="L">Large</option>
-                  <option value="XL">Extra Large</option>
-                </select>
-                <input
-                  type="number"
-                  name={`stock_${index}`}
-                  value={sizeStock.stock}
-                  onChange={handleChange}
-                  placeholder="Stock quantity"
-                />
-                <button type="button" onClick={() => handleRemoveSizeStock(index)}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={handleAddSizeStock}>Add Size/Stock</button>
-          </div>
-        )}
+        <div>
+          <h4>Sizes and Stock:</h4>
+          {newApparel.sizes.map((sizeStock, index) => (
+            <div key={index} className="size-stock-pair">
+              <select
+                name={`size_${index}`}
+                value={sizeStock.size}
+                onChange={handleChange}
+              >
+                <option value="">Select Size</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+              <input
+                type="number"
+                name={`stock_${index}`}
+                value={sizeStock.inStock}
+                onChange={handleChange}
+                placeholder="Stock quantity"
+              />
+              <button type="button" onClick={() => handleRemoveSizeStock(index)}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={handleAddSizeStock}>Add Size/Stock</button>
+        </div>
 
         <button type="submit">Submit</button>
         <button type="button" onClick={closeForm}>Cancel</button>

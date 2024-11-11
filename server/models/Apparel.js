@@ -15,15 +15,15 @@ const apparelSchema = new mongoose.Schema(
     style: {
       type: String,
       required: true,
-      enum: ['Hoodie', 'T-shirt'], // Allowed values for the style
-      default: 't-shirt',
+      enum: ['Hoodie', 'T-Shirt'], // Allowed values for the style
+      default: 'T-Shirt',
     },
     sizes: [
       {
         size: {
           type: String,
           required: true,
-          enum: ['S', 'M', 'L', 'XL', 'XXL'], // Example sizes
+          enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], // Example sizes
         },
         inStock: {
           type: Number,
