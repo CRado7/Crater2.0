@@ -7,6 +7,7 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState({});
   const [removeFromCart] = useMutation(REMOVE_FROM_CART);
+  const [showModal, setShowModal] = useState(false); // Modal state
 
   // Load cart items from local storage when component mounts
   useEffect(() => {
@@ -28,6 +29,14 @@ const CartPage = () => {
     );
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
+  const handleCheckout = () => {
+    setShowModal(true); // Show modal
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close modal
   };
 
   if (!cartItems.length) {
@@ -88,7 +97,18 @@ const CartPage = () => {
         </h3>
       </div>
 
-      <button className="checkout-button">Checkout</button>
+      <button className="checkout-button" onClick={handleCheckout}>Checkout</button>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>This is not a real site and these are not real items, but if you are impressed by this case study, please reach out so we can schedule an interview.</h3>
+            <a href="mailto:christopher.ferraro34@gmail.com">Email me here</a>
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

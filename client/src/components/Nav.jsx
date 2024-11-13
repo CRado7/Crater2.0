@@ -1,4 +1,3 @@
-// src/components/Nav.jsx
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import navLogo from '../assets/navLogo.svg';
@@ -13,21 +12,33 @@ export default function Nav() {
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <nav className="navbar">
         <div className="nav-left">
-          <NavLink to="/" className="nav-logo">
+          <NavLink to="/" className="nav-logo" onClick={closeMenu}>
             <img src={navLogo} alt="navLogo" />
           </NavLink>
         </div>
 
         <div className={`nav-center ${isOpen ? 'open' : ''}`}>
           <ul>
-            <NavLink to="/apparel" className={({ isActive }) => (isActive ? 'active' : '')}><li>Apparel</li></NavLink>
-            <NavLink to="/snowboards" className={({ isActive }) => (isActive ? 'active' : '')}><li>Snowboards</li></NavLink>
-            <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')}><li>Contact</li></NavLink>
-            <NavLink to="/cart" className={({ isActive }) => (isActive ? 'active' : '')}><li>Cart</li></NavLink>
+            <NavLink to="/apparel" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>
+              <li>Apparel</li>
+            </NavLink>
+            <NavLink to="/snowboards" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>
+              <li>Snowboards</li>
+            </NavLink>
+            <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>
+              <li>Contact</li>
+            </NavLink>
+            <NavLink to="/cart" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>
+              <li>Cart</li>
+            </NavLink>
           </ul>
         </div>
 
@@ -35,16 +46,6 @@ export default function Nav() {
           <div className="search-bar">
             <input type="text" placeholder="Search" />
             <span className="search-icon"><img src={searchIcon} alt="search-icon" /></span>
-          </div>
-          <div className="user-icons">
-            <div>
-              <img
-                className="user cart"
-                src={cartIcon}
-                alt="cart-icon"
-                style={{ cursor: 'pointer' }}
-              />
-            </div>
           </div>
         </div>
 
