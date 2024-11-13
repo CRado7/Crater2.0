@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Use this instead of useHistory
-import '../styles/ApparelCard.css';
+import '../styles/productCard.css';
 
 const ApparelCard = ({ apparel }) => {
   const navigate = useNavigate(); // This replaces useHistory
@@ -10,19 +10,17 @@ const ApparelCard = ({ apparel }) => {
   };
 
   return (
-    <div className="apparel-card" onClick={handleCardClick}>
-      <div className="apparel-image-container">
+    <div className="product-card" onClick={handleCardClick}>
+      <div className="product-image-container">
         <img
           src={apparel.picture} // Image URL for the apparel item
           alt={apparel.name} // Name as alt text for image
-          className="apparel-image"
+          className="product-image"
         />
       </div>
-      <div className="apparel-details">
-        <h3 className="apparel-name">{apparel.name}</h3>
-        <p className="apparel-price">${apparel.price}</p>
-        {apparel.size && <p className="apparel-size">{`Size: ${apparel.size}`}</p>}
-        {apparel.color && <p className="apparel-color">{`Color: ${apparel.color}`}</p>}
+      <div className="product-details">
+        <h3 className="product-name">{apparel.name}</h3>
+        <p className="product-price">${apparel.price}</p>
       </div>
     </div>
   );

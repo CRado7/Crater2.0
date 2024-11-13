@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import navLogo from '../assets/navLogo.svg';
 import searchIcon from '../assets/searchIcon.svg';
-import cartIcon from '../assets/shoppingcart.svg';
 import '../styles/NavBar.css';
 
 export default function Nav() {

@@ -10,7 +10,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: rgb(245 245, 245);
 }
 
 .hero {
@@ -31,7 +31,6 @@
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
 }
 
 .tagline {
@@ -39,7 +38,7 @@
     margin: 30px 0 30px 0;
 }
 
-h1 {
+.hero h1 {
     font-family: "Regular";
     font-size: 1.5em;
     color: #232323;
@@ -48,17 +47,131 @@ h1 {
     letter-spacing: 6px;
 }
 
+h1 {
+    font-family: "Bold";
+    font-size: 2em;
+    color: #232323;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+}
+
+h2 {
+    font-family: "Regular";
+    font-size: 1.5em;
+    color: #232323;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+}
+
+p {
+    font-size: 1em;
+    color: #232323;
+    letter-spacing: 1px;
+}
+
 .toTop {
     height: 20px;
     animation: bounce 2s infinite;
 }
 
+@media screen and (max-width: 320px) {
+    p {
+        font-size: 0.8em;
+    }
+}
+
+/* FEATURED PRODUCTS */
 .featured-products {
     width: 100%;
     background-color: aqua;
 
 }
 
+/* ABOUT */
+.about {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.about img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-text, .about-image {
+    padding: 50px 100px;
+    width: 50%;
+    min-width: 300px;
+}
+
+@media screen and (max-width: 1260px) {
+    .about-image {
+        display: none;
+    }
+
+    .about-text {
+        width: 100%;
+        padding: 50px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .about-text {
+        padding: 25px;
+    }
+}
+
+/* TECHNOLOGY */
+.technology-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: rgb(245, 245, 245);
+}
+
+.technology-item {
+    width: 50%;
+    min-width: 300px;
+    padding: 50px 100px;
+}
+
+.technology-item h2 {
+    text-align: left;
+}
+
+@media screen and (max-width: 1260px) {
+    .technology-item {
+        padding: 50px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .technology-list {
+        flex-direction: column;   
+    }
+
+    .technology-item {
+        width: 100%;
+        padding: 25px 50px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .technology-item {
+        padding: 25px;
+    }
+
+    .technology-item h2 {
+        text-align: center;
+    }   
+}
+
+/* ANIMATIONS */
 @keyframes bounce {
     0%, 10%, 60%, 100% {
         transform: translateX(-50%);

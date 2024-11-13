@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_SNOWBOARDS } from '../utils/queries';
 import SnowboardCard from '../components/SnowboardCard';
+import '../styles/ProductPage.css';
 
 export default function SnowboardsPage() {
   const { loading, error, data } = useQuery(GET_ALL_SNOWBOARDS);
@@ -19,9 +20,9 @@ export default function SnowboardsPage() {
   const snowboardItems = data?.getAllSnowboards || []; // Handle potential undefined data
 
   return (
-    <div className="snowboards-page">
+    <div className="product-page">
       <h1>Our Boards</h1>
-      <div className="snowboards-grid">
+      <div className="product-grid">
         {snowboardItems.map((item) => (
           <SnowboardCard key={item._id} snowboard={item} />
         ))}

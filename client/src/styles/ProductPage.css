@@ -1,0 +1,25 @@
+.product-page {
+    width: 100%;
+    background-color: rgb(250, 250, 250);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 1rem;
+    padding: 1rem;
+}
+
+.product-name {
+    text-align: center;
+}
+
+/* Snowboard Specific Styles */
+
+.specs-container p {
+    font-size: 14px;
+    margin: 0;
+}
+.specs {
+    text-transform: uppercase;
+}

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_APPAREL } from '../utils/queries';
 import ApparelCard from '../components/ApparelCard';
+import '../styles/ProductPage.css';
 
 export default function ApparelPage() {
   const { loading, error, data } = useQuery(GET_ALL_APPAREL);
@@ -19,9 +20,9 @@ export default function ApparelPage() {
   const apparelItems = data?.getAllApparel || []; // Handle potential undefined data
 
   return (
-    <div className="apparel-page">
+    <div className="product-page">
       <h1>Our Apparel</h1>
-      <div className="apparel-grid">
+      <div className="product-grid">
         {apparelItems.map((item) => (
           <ApparelCard key={item._id} apparel={item} />
         ))}

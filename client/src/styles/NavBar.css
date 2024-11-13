@@ -4,6 +4,10 @@
     padding: 10px 20px;
     position: relative;
     height: 100px;
+    position: sticky;
+    top:0;
+    background: linear-gradient(180deg, rgba(245,245,245,1) 0%, rgba(245,245,245,0.9037990196078431) 50%, rgba(245,245,245,0.5956757703081232) 75%, rgba(245,245,245,0) 100%);
+    z-index: 3;
 }
 
 .nav-left, .nav-center, .nav-right{
@@ -25,7 +29,7 @@
 }
 
 nav a {
-    color: #232323;
+    color: #333;
     text-decoration: none;
     font-size: 18px;
     letter-spacing: 1px;
@@ -79,7 +83,7 @@ nav a.active {
 }
 
 .search-bar input:focus {
-    border-color: #ff7900;
+    border-color: rgb(255, 119, 0);
 }
 
 /* Hamburger Menu */
