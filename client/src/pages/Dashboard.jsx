@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import AuthService from '../utils/auth';
-import { GET_GENERAL_STATS, GET_SNOWBOARD_STATS, GET_APPAREL_STATS } from '../utils/queries'; // Import your queries
+import { GET_GENERAL_STATS } from '../utils/queries'; // Import your queries
+import { GET_TOP_APPAREL, GET_TOP_SNOWBOARD } from '../utils/queries';
 import AdminSnowboardCard from '../components/admin/AdminSnowboardCard'; // Import your components
 import AdminApparelCard from '../components/admin/AdminApparelCard';
 import AddSnowboardForm from '../components/admin/add/AddSnowboardForm';
@@ -25,10 +26,12 @@ const AdminDashboard = () => {
   const { data: generalData } = useQuery(GET_GENERAL_STATS, {
     skip: activeTab !== 'general'
   });
-  const { data: snowboardData } = useQuery(GET_SNOWBOARD_STATS, {
+  const { data: topSnowboardData } = useQuery(GET_TOP_SNOWBOARD, {
+    variables: { limit: 1 },
     skip: activeTab !== 'snowboards'
   });
-  const { data: apparelData } = useQuery(GET_APPAREL_STATS, {
+  const { data: topApparelData } = useQuery(GET_TOP_APPAREL, {
+    variables: { limit: 3 },
     skip: activeTab !== 'apparel'
   });
 
@@ -45,20 +48,6 @@ const AdminDashboard = () => {
     <div>
       <h2>General Stats</h2>
       <p>Total Site Visitors: {generalData?.generalStats?.stats?.totalVisitors ?? 'Data not available'}</p>
-      <h3>Monthly Visitors</h3>
-      <ul>
-        {generalData?.generalStats?.stats?.monthlyVisitors?.map((visitor) => (
-          <li key={visitor.month}>{visitor.month}: {visitor.count}</li>
-        )) || <li>Data not available</li>}
-      </ul>
-      <h3>Sales Data</h3>
-      <ul>
-        {generalData?.generalStats?.salesData?.map((sale) => (
-          <li key={sale.month}>{sale.month} - {sale.itemType}: ${sale.total.toFixed(2)}</li>
-        )) || <li>Data not available</li>}
-      </ul>
-      {/* Line chart placeholder */}
-      <p>Line chart of total sales by month goes here</p>
     </div>
   );
 
@@ -66,24 +55,26 @@ const AdminDashboard = () => {
     <div>
       <div>
         <h2>Snowboard Stats</h2>
-        
-        <h3>Sales Data</h3>
-        <ul>
-          {snowboardData?.salesData?.map((sale) => (
-            <li key={sale.month}>{sale.month}: ${sale.total.toFixed(2)}</li>
-          )) || <li>Data not available</li>}
-        </ul>
-    
         <h3>Most Viewed Board</h3>
-        <p>
-          {snowboardData?.mostViewedBoard 
-            ? `Name: ${snowboardData.mostViewedBoard.name}`
-            : 'Data not available'}
-        </p>
-    
-        {/* Line chart placeholder */}
-        <p>Line chart of snowboard sales by month goes here</p>
+        {topSnowboardData && topSnowboardData.topSnowboardByViews && topSnowboardData.topSnowboardByViews.length > 0 ? (
+          <div>
+            {topSnowboardData.topSnowboardByViews[0].picture && topSnowboardData.topSnowboardByViews[0].picture.length > 0 && (
+              <img 
+                src={topSnowboardData.topSnowboardByViews[0].picture[0]} // Access the first image in the array
+                alt={topSnowboardData.topSnowboardByViews[0].name} 
+                style={{ width: '50px' }} 
+              />
+            )}
+            <p>Name: {topSnowboardData.topSnowboardByViews[0].name}</p>
+            <p>Views: {topSnowboardData.topSnowboardByViews[0].views}</p>
+            <p>Price: ${topSnowboardData.topSnowboardByViews[0].price}</p>
+          </div>
+        ) : (
+          <p>Loading top board...</p>
+        )}
       </div>
+
+
       <div className="cards">
         <button onClick={handleAddBoardClick}>Add A New Board</button>
 
@@ -98,24 +89,23 @@ const AdminDashboard = () => {
     <div>
       <div>
         <h2>Apparel Stats</h2>
-        
-        <h3>Sales Data</h3>
-        <ul>
-          {apparelData?.salesData?.map((sale) => (
-            <li key={sale.month}>{sale.month}: ${sale.total.toFixed(2)}</li>
-          )) || <li>Data not available</li>}
-        </ul>
-    
-        <h3>Most Viewed Item</h3>
-        <p>
-          {apparelData?.mostViewedApparel 
-            ? `Name: ${apparelData.mostViewedApparel.name}`
-            : 'Data not available'}
-        </p>
-    
-        {/* Line chart placeholder */}
-        <p>Line chart of apparel sales by month goes here</p>
+        <h3>Top 3 Most Viewed Items</h3>
+        {topApparelData ? (
+          <ul>
+            {topApparelData.topApparelByViews.map((item) => (
+              <li key={item._id}>
+                <img src={item.pictures[0]} alt={item.name} style={{ width: '50px' }} />
+                <p>Name: {item.name}</p>
+                <p>Views: {item.views}</p>
+                <p>Price: ${item.price}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Loading top apparel items...</p>
+        )}
       </div>
+
       <div className="cards">
         <button onClick={handleAddBoardClick}>Add New Apparel</button>
 

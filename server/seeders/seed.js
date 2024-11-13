@@ -9,7 +9,7 @@ db.once('open', async () => {
   try {
     // Clean the collections
     await cleanDB('User', 'users');
-    await cleanDB('Apparel', 'apparels');
+    await cleanDB('Apparel', 'apparel');
     await cleanDB('Snowboard', 'snowboards');
 
     // Seed User data

@@ -29,7 +29,10 @@ export const GET_SNOWBOARD = gql`
       picture
       name
       shape
-      sizes
+      sizes {
+        size
+        inStock
+      }
       flex
       boardConstruction
       price
@@ -65,7 +68,10 @@ export const GET_APPAREL = gql`
       pictures
       name
       style
-      size
+      sizes {
+        size
+        inStock
+      }
       price
     }
   }
@@ -73,7 +79,7 @@ export const GET_APPAREL = gql`
 
 // Query to get all apparel items
 export const GET_ALL_APPAREL = gql`
-  query GetAllApparel {
+  query getAllApparel {
     getAllApparel {
       _id
       pictures
@@ -137,3 +143,39 @@ export const GET_APPAREL_STATS = gql`
     }
   }
 `;
+
+export const GET_CART = gql`
+  query GetCart {
+    getCart {
+      productId
+      quantity
+      size
+      price
+      onModel
+    }
+  }
+`;
+export const GET_TOP_APPAREL = gql`
+  query TopApparelByViews($limit: Int) {
+    topApparelByViews(limit: $limit) {
+      _id
+      name
+      views
+      pictures
+      price
+    }
+  }
+`;
+
+export const GET_TOP_SNOWBOARD = gql`
+  query TopSnowboardByViews($limit: Int) {
+    topSnowboardByViews(limit: $limit) {
+      _id
+      name
+      views
+      picture
+      price
+    }
+  }
+`;
+

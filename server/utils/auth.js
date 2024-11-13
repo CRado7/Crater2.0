@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { GraphQLError } = require('graphql');
 
 const secret = 'mysecretssshhhhhhh';
 const expiration = '2h';
@@ -17,21 +18,18 @@ module.exports = {
       token = token.split(' ').pop().trim();
     }
 
+    // If there's no token, return req without throwing an error
     if (!token) {
-      return req; // No token, no modification to the request
+      return req;
     }
 
     try {
-      // Decode and attach user data to request if valid
+      // Verify the token and attach user data to req if valid
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
     } catch (err) {
       console.error('Invalid token:', err);
-      throw new GraphQLError('Invalid token', {
-        extensions: {
-          code: 'UNAUTHENTICATED',
-        },
-      });
+      // Do not throw an error here; just don't attach user data to req
     }
 
     // Return the request with the user attached, if verified

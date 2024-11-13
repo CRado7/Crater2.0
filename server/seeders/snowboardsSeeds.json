@@ -1,66 +1,86 @@
 [
   {
     "picture": [
-      "https://example.com/snowboard1.jpg"
+      "https://example.com/images/snowboard1.jpg",
+      "https://example.com/images/snowboard1-alt.jpg"
     ],
-    "name": "Freestyle Pro",
-    "shape": "twin",
+    "name": "The Apex",
+    "shape": "directional",
     "sizes": [
       {
-        "size": "S",
+        "size": "157",
         "inStock": 10
       },
       {
-        "size": "M",
-        "inStock": 20
-      },
-      {
-        "size": "L",
-        "inStock": 15
+        "size": "160",
+        "inStock": 5
       }
     ],
     "flex": "medium",
-    "boardConstruction": "Wood core with carbon reinforcement",
+    "boardConstruction": "camber",
     "price": 499.99
   },
   {
     "picture": [
-      "https://example.com/snowboard2.jpg"
+      "https://example.com/images/snowboard2.jpg",
+      "https://example.com/images/snowboard2-alt.jpg"
     ],
-    "name": "All-Mountain X",
-    "shape": "directional",
+    "name": "Stealth X",
+    "shape": "twin",
     "sizes": [
       {
-        "size": "M",
-        "inStock": 30
+        "size": "152",
+        "inStock": 7
       },
       {
-        "size": "L",
-        "inStock": 25
-      }
-    ],
-    "flex": "stiff",
-    "boardConstruction": "Fiberglass with a bamboo core",
-    "price": 599.99
-  },
-  {
-    "picture": [
-      "https://example.com/snowboard3.jpg"
-    ],
-    "name": "Powder Master",
-    "shape": "directional",
-    "sizes": [
-      {
-        "size": "L",
-        "inStock": 10
-      },
-      {
-        "size": "XL",
-        "inStock": 5
+        "size": "155",
+        "inStock": 3
       }
     ],
     "flex": "soft",
-    "boardConstruction": "Lightweight wood core with special powder coating",
-    "price": 649.99
+    "boardConstruction": "rocker",
+    "price": 399.99
+  },
+  {
+    "picture": [
+      "https://example.com/images/snowboard3.jpg",
+      "https://example.com/images/snowboard3-alt.jpg"
+    ],
+    "name": "Stormrider 3000",
+    "shape": "directional-twin",
+    "sizes": [
+      {
+        "size": "163",
+        "inStock": 8
+      },
+      {
+        "size": "167",
+        "inStock": 6
+      }
+    ],
+    "flex": "stiff",
+    "boardConstruction": "hybrid",
+    "price": 549.99
+  },
+  {
+    "picture": [
+      "https://example.com/images/snowboard4.jpg",
+      "https://example.com/images/snowboard4-alt.jpg"
+    ],
+    "name": "Powder Master",
+    "shape": "directional-powder",
+    "sizes": [
+      {
+        "size": "160",
+        "inStock": 4
+      },
+      {
+        "size": "163",
+        "inStock": 3
+      }
+    ],
+    "flex": "medium",
+    "boardConstruction": "traditional",
+    "price": 599.99
   }
 ]

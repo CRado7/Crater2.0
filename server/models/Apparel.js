@@ -37,6 +37,10 @@ const apparelSchema = new mongoose.Schema(
       required: true,
       min: 0, // Minimum price allowed
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

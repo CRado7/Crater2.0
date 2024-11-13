@@ -34,10 +34,23 @@ const typeDefs = gql`
     pictures: [String!]!
     name: String!
     style: String!
-    sizes: [ApparelSize!]! # Updated to support multiple sizes with individual stock values
+    sizes: [ApparelSize!]! 
     price: Float!
     views: Int
   }
+
+  type Cart {
+    _id: ID
+    items: [CartItem]
+  }
+  
+  type CartItem {
+    productId: ID!
+    quantity: Int!
+    size: String!
+    price: Float!
+    onModel: String!
+  }  
 
   type Auth {
     token: ID!
@@ -84,16 +97,24 @@ const typeDefs = gql`
     getAllSnowboards: [Snowboard!]!
     getApparel(id: ID!): Apparel
     getAllApparel: [Apparel!]!
+    getCart: [CartItem]
 
     generalStats: GeneralStats!
     snowboardStats: SnowboardStats!
     apparelStats: ApparelStats!
+    
+    topApparelByViews(limit: Int): [Apparel]
+    topSnowboardByViews(limit: Int): [Snowboard]
   }
 
   type Mutation {
     createUser(username: String!, password: String!): User!
     login(username: String!, password: String!): Auth
     logout: String!
+    addToCart(productId: ID!, quantity: Int!, size: String!, type: String!): [CartItem]
+    removeFromCart(productId: ID!): [CartItem]
+    incrementApparelViews(_id: ID!): Apparel
+    incrementSnowboardViews(_id: ID!): Snowboard
     
     createSnowboard(
       picture: [String!], 

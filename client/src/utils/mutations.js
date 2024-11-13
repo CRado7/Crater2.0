@@ -150,3 +150,49 @@ export const DELETE_APPAREL = gql`
   }
 `;
 
+export const INCREMENT_APPAREL_VIEWS = gql`
+  mutation IncrementApparelViews($id: ID!) {
+    incrementApparelViews(_id: $id) {
+      name
+      views
+    }
+  }
+`;
+
+export const INCREMENT_SNOWBOARD_VIEWS = gql`
+  mutation IncrementSnowboardViews($id: ID!) {
+    incrementSnowboardViews(_id: $id) {
+      name
+      views
+    }
+  }
+`;
+
+export const ADD_TO_CART = gql`
+  mutation addToCart($productId: ID!, $quantity: Int!, $type: String!, $size: String!) {
+    addToCart(productId: $productId, quantity: $quantity, type: $type, size: $size) {
+      productId
+      quantity
+      size
+      onModel
+    }
+  }
+`;
+
+export const REMOVE_FROM_CART = gql`
+  mutation removeFromCart($itemId: ID!) {
+    removeFromCart(itemId: $itemId) {
+      _id
+      items {
+        productId
+        quantity
+        size
+        onModel
+      }
+    }
+  }
+`;
+
+
+
+

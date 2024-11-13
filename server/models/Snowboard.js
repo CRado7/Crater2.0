@@ -48,6 +48,10 @@ const snowboardSchema = new mongoose.Schema(
       required: true,
       min: 0, // Minimum price allowed
     },
+    views: {
+      type: Number,
+      default: 0, // Default value for views
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields
