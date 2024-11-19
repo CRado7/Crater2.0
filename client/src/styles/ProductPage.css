@@ -1,6 +1,5 @@
 .product-page {
     width: 100%;
-    background-color: rgb(250, 250, 250);
 }
 
 .product-grid {
@@ -14,12 +13,17 @@
     text-align: center;
 }
 
+h1 {
+    font-family: "Bold";
+}
+
 /* Snowboard Specific Styles */
 
 .specs-container p {
     font-size: 14px;
     margin: 0;
 }
+
 .specs {
     text-transform: uppercase;
 }

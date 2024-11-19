@@ -3,11 +3,11 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// Define the CartItem schema to store details for each cart item
+// CartItem schema to store product details
 const CartItemSchema = new Schema({
   productId: {
     type: Schema.Types.ObjectId,
-    refPath: 'onModel', // This allows us to dynamically reference either 'Apparel' or 'Snowboard'
+    refPath: 'onModel', // Dynamically references 'Apparel' or 'Snowboard'
     required: true,
   },
   quantity: {
@@ -15,15 +15,38 @@ const CartItemSchema = new Schema({
     required: true,
     default: 1,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  size: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
 });
 
-// The cart schema will reference CartItemSchema
+// Cart schema that includes a sessionId field
 const CartSchema = new Schema({
+  sessionId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   items: [CartItemSchema],
-  // The cart does not need to be tied to a user account, it is anonymous
 });
 
-// Create the Cart model
 const Cart = mongoose.model('Cart', CartSchema);
 
 module.exports = Cart;

@@ -4,6 +4,7 @@ import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path as needed
 import { DELETE_APPAREL } from '../../utils/mutations'; // Adjust path as needed
 import DeleteApparelForm from '../admin/delete/DeleteApparelForm'; // Adjust path as needed
 import UpdateApparelForm from '../admin/update/UpdateApparelForm'; // Adjust path as needed
+import '../../styles/ProductCard.css'; // Import styles
 
 const AdminApparelCard = React.memo(() => {
   const { loading, error, data } = useQuery(GET_ALL_APPAREL);
@@ -48,16 +49,18 @@ const AdminApparelCard = React.memo(() => {
             <ul>
               {apparel.sizes.map((size, index) => (
                 <li key={index} className="size-item">
-                  <span className="size-stock">{size.inStock || 'N/A'}</span>
-                  <span>{size.size}</span>
+                  <span>{size.size}: </span>
+                  <span className="size-stock">{size.inStock || 0}</span>
                 </li>
               ))}
             </ul>
           </div>
+          <h3>${apparel.price}</h3>
+          <p>Featured: {apparel.featured ? "Yes" : "No"}</p>
 
           {/* Buttons to trigger delete and update popups */}
           <button onClick={() => setShowDeletePopup(apparel)}>Delete</button>
-          <button onClick={() => setShowUpdatePopup(apparel)}>Update Stock</button>
+          <button onClick={() => setShowUpdatePopup(apparel)}>Update Item</button>
         </div>
       ))}
 

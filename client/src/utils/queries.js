@@ -55,6 +55,7 @@ export const GET_ALL_SNOWBOARDS = gql`
       flex
       boardConstruction
       price
+      featured
     }
   }
 `;
@@ -85,31 +86,57 @@ export const GET_ALL_APPAREL = gql`
       pictures
       name
       style
-      price
       sizes {
         size
         inStock
       }
+      price
+      featured
     }
   }
 `;
 
+export const GET_FEATURED_SNOWBOARDS = gql`
+  query GetFeaturedSnowboards {
+    getFeaturedSnowboards {
+      _id
+      picture
+      name
+      shape
+      sizes {
+        size
+        inStock
+      }
+      flex
+      boardConstruction
+      price
+      featured
+    }
+  }
+`;
 
-export const GET_GENERAL_STATS = gql`
-  query GetGeneralStats {
-    generalStats {
-      stats {
-        totalVisitors
-        monthlyVisitors {
-          month
-          count
-        }
+export const GET_FEATURED_APPAREL = gql`
+  query GetFeaturedApparel {
+    getFeaturedApparel {
+      _id
+      pictures
+      name
+      style
+      sizes {
+        size
+        inStock
       }
-      salesData {
-        month
-        itemType
-        total
-      }
+      price
+      featured
+    }
+  }
+`;
+
+export const GET_SITE_STATS = gql`
+  query GetSiteStats {
+    getSiteStats {
+      totalViews
+      uniqueVisits
     }
   }
 `;
@@ -147,14 +174,21 @@ export const GET_APPAREL_STATS = gql`
 export const GET_CART = gql`
   query GetCart {
     getCart {
-      productId
-      quantity
-      size
-      price
-      onModel
+      sessionId
+      items {
+        productId
+        quantity
+        name
+        size
+        type
+        image
+        price
+      }
     }
   }
 `;
+
+
 export const GET_TOP_APPAREL = gql`
   query TopApparelByViews($limit: Int) {
     topApparelByViews(limit: $limit) {
@@ -163,6 +197,7 @@ export const GET_TOP_APPAREL = gql`
       views
       pictures
       price
+      featured
     }
   }
 `;
@@ -175,6 +210,7 @@ export const GET_TOP_SNOWBOARD = gql`
       views
       picture
       price
+      featured
     }
   }
 `;

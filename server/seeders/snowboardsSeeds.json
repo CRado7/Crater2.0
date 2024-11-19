@@ -18,7 +18,8 @@
     ],
     "flex": "medium",
     "boardConstruction": "camber",
-    "price": 499.99
+    "price": 499.99,
+    "featured": true
   },
   {
     "picture": [
@@ -39,7 +40,8 @@
     ],
     "flex": "soft",
     "boardConstruction": "rocker",
-    "price": 399.99
+    "price": 399.99,
+    "featured": false
   },
   {
     "picture": [
@@ -60,7 +62,8 @@
     ],
     "flex": "stiff",
     "boardConstruction": "hybrid",
-    "price": 549.99
+    "price": 549.99,
+    "featured":false
   },
   {
     "picture": [
@@ -81,6 +84,7 @@
     ],
     "flex": "medium",
     "boardConstruction": "traditional",
-    "price": 599.99
+    "price": 599.99,
+    "featured": true
   }
 ]

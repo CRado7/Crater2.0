@@ -8,6 +8,10 @@
     "style": "Hoodie",
     "sizes": [
       {
+        "size": "XS",
+        "inStock": 0
+      },
+      {
         "size": "S",
         "inStock": 10
       },
@@ -18,9 +22,18 @@
       {
         "size": "L",
         "inStock": 5
+      },
+      {
+        "size": "XL",
+        "inStock": 20
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
     ],
-    "price": 39.99
+    "price": 39.99,
+    "featured": true
   },
   {
     "pictures": [
@@ -30,6 +43,14 @@
     "name": "Snowboarder T-Shirt",
     "style": "T-Shirt",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
+      {
+        "size": "S",
+        "inStock": 10
+      },
       {
         "size": "M",
         "inStock": 0
@@ -41,9 +62,14 @@
       {
         "size": "XL",
         "inStock": 8
+      },
+      {
+        "size": "XXL",
+        "inStock": 5
       }
     ],
-    "price": 19.99
+    "price": 19.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -53,6 +79,14 @@
     "name": "Adventurer Hoodie",
     "style": "Hoodie",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
+      {
+        "size": "S",
+        "inStock": 5
+      },
       {
         "size": "M",
         "inStock": 10
@@ -64,9 +98,14 @@
       {
         "size": "XL",
         "inStock": 20
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
     ],
-    "price": 49.99
+    "price": 49.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -76,6 +115,10 @@
     "name": "Alpine Ridge T-Shirt",
     "style": "T-Shirt",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
       {
         "size": "S",
         "inStock": 5
@@ -87,9 +130,18 @@
       {
         "size": "L",
         "inStock": 2
+      },
+      {
+        "size": "XL",
+        "inStock": 0
+      },
+      {
+        "size": "XXL",
+        "inStock": 10
       }
     ],
-    "price": 24.99
+    "price": 24.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -99,6 +151,10 @@
     "name": "Sunset Adventure Hoodie",
     "style": "Hoodie",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
       {
         "size": "S",
         "inStock": 8
@@ -110,9 +166,18 @@
       {
         "size": "L",
         "inStock": 0
+      },
+      {
+        "size": "XL",
+        "inStock": 20
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
     ],
-    "price": 59.99
+    "price": 59.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -123,8 +188,16 @@
     "style": "T-Shirt",
     "sizes": [
       {
+        "size": "XS",
+        "inStock": 30
+      },
+      {
         "size": "S",
         "inStock": 10
+      },
+      {
+        "size": "M",
+        "inStock": 0
       },
       {
         "size": "L",
@@ -133,9 +206,14 @@
       {
         "size": "XL",
         "inStock": 15
+      },
+      {
+        "size": "XXL",
+        "inStock": 0
       }
     ],
-    "price": 22.99
+    "price": 22.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -145,6 +223,14 @@
     "name": "Trailblazer Hoodie",
     "style": "Hoodie",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
+      {
+        "size": "S",
+        "inStock": 5
+      },
       {
         "size": "M",
         "inStock": 0
@@ -156,9 +242,14 @@
       {
         "size": "XL",
         "inStock": 20
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
     ],
-    "price": 65.99
+    "price": 65.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -181,7 +272,8 @@
         "inStock": 10
       }
     ],
-    "price": 27.99
+    "price": 27.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -204,7 +296,8 @@
         "inStock": 7
       }
     ],
-    "price": 54.99
+    "price": 54.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -214,6 +307,14 @@
     "name": "Summit View T-Shirt",
     "style": "T-Shirt",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 5
+      },
+      {
+        "size": "S",
+        "inStock": 0
+      },
       {
         "size": "M",
         "inStock": 5
@@ -225,9 +326,14 @@
       {
         "size": "XL",
         "inStock": 10
+      },
+      {
+        "size": "XXL",
+        "inStock": 0
       }
     ],
-    "price": 18.99
+    "price": 18.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -237,6 +343,10 @@
     "name": "Everest Expedition Hoodie",
     "style": "Hoodie",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
       {
         "size": "S",
         "inStock": 15
@@ -248,9 +358,18 @@
       {
         "size": "L",
         "inStock": 0
+      },
+      {
+        "size": "XL",
+        "inStock": 50
+      },
+      {
+        "size": "XXL",
+        "inStock": 45
       }
     ],
-    "price": 74.99
+    "price": 74.99,
+    "featured": false
   },
   {
     "pictures": [
@@ -261,18 +380,32 @@
     "style": "T-Shirt",
     "sizes": [
       {
+        "size": "XS",
+        "inStock": 3
+      },
+      {
         "size": "S",
-        "inStock": 20
+        "inStock": 18
       },
       {
         "size": "M",
-        "inStock": 5
+        "inStock": 7
       },
       {
         "size": "L",
-        "inStock": 2
+        "inStock": 8
+      },
+      {
+        "size": "XL",
+        "inStock": 19
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
+
     ],
-    "price": 29.99
+    "price": 29.99,
+    "featured": true
   }
 ]

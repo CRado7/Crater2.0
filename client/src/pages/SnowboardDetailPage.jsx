@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_SNOWBOARD } from '../utils/queries';
+import { ADD_TO_CART } from '../utils/mutations'; // Import the mutation
 import { INCREMENT_SNOWBOARD_VIEWS } from '../utils/mutations';
-import '../styles/SnowboardDetailPage.css';
+import '../styles/ProductDetailsPage.css';
 
 const SnowboardDetailPage = () => {
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_SNOWBOARD, { variables: { id } });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState(''); // Initialize size state
+  const [size, setSize] = useState('');
   const [incrementSnowboardViews] = useMutation(INCREMENT_SNOWBOARD_VIEWS);
+  const [addToCart] = useMutation(ADD_TO_CART); // Use the ADD_TO_CART mutation
 
   useEffect(() => {
     incrementSnowboardViews({ variables: { id } })
@@ -23,56 +25,54 @@ const SnowboardDetailPage = () => {
       });
   }, [id, incrementSnowboardViews]);
 
-    // Handle image navigation
-    const handleImageNavigation = (direction) => {
-      setCurrentImageIndex((prevIndex) => {
-        if (direction === 'next') {
-          return (prevIndex + 1) % data.getSnowboard.pictures.length;
-        }
-        if (direction === 'prev') {
-          return (prevIndex - 1 + data.getSnowboard.pictures.length) % data.getSnowboard.pictures.length;
-        }
-      });
-    };
+  const handleImageNavigation = (direction) => {
+    setCurrentImageIndex((prevIndex) => {
+      if (direction === 'next') {
+        return (prevIndex + 1) % data.getSnowboard.pictures.length;
+      }
+      if (direction === 'prev') {
+        return (prevIndex - 1 + data.getSnowboard.pictures.length) % data.getSnowboard.pictures.length;
+      }
+    });
+  };
 
-  // Handle add to cart
-  const handleAddToCart = () => {
+  // Handle add to cart with mutation
+  const handleAddToCart = async () => {
     if (!size) {
       alert('Please select a size!');
       return;
     }
-
+  
     const type = 'snowboard';
     const selectedSize = data.getSnowboard.sizes.find((s) => s.size === size);
-
+  
     if (selectedSize && selectedSize.inStock < quantity) {
       alert('Sorry, not enough stock for this size!');
       return;
     }
-
-    // Retrieve cart from local storage or initialize an empty array
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Check if item with same ID and size is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.productId === id && item.size === size);
-
-    if (existingItemIndex >= 0) {
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      cart.push({
-        productId: id,
-        name: data.getSnowboard.name,
-        price: data.getSnowboard.price,
-        quantity,
-        size,
-        type,
-        image: data.getSnowboard.picture[0], // Use single image field
+  
+    try {
+      // Wrap the input data in an "input" object as expected by the mutation
+      await addToCart({
+        variables: {
+          input: {
+            productId: id,
+            name: data.getSnowboard.name,
+            price: data.getSnowboard.price,
+            quantity,
+            size,
+            type,
+            image: data.getSnowboard.picture[0], // Use the first image
+          },
+        },
       });
+  
+      alert('Item added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Item added to cart!');
   };
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -80,9 +80,9 @@ const SnowboardDetailPage = () => {
   const snowboard = data.getSnowboard;
 
   return (
-    <div className="snowboard-detail-container">
+    <div className="product-details-container">
       <div className="image-container">
-      {snowboard.picture.length > 1 && (
+        {snowboard.picture.length > 1 && (
           <>
             <button className="nav-button prev" onClick={() => handleImageNavigation('prev')}>
               &#8592;
@@ -91,7 +91,7 @@ const SnowboardDetailPage = () => {
               &#8594;
             </button>
           </>
-        )} 
+        )}
         <img
           src={snowboard.picture[currentImageIndex]}
           alt={snowboard.name}
@@ -116,26 +116,26 @@ const SnowboardDetailPage = () => {
         {/* Size Selection */}
         <div className="size-selection">
           <label htmlFor="size">Size: </label>
-          <select
-            id="size"
-            onChange={(e) => setSize(e.target.value)}
-            value={size}
-          >
-            <option value="">Select Size</option>
+          <div className="size-buttons">
             {snowboard.sizes.map((sizeOption, index) => (
-              <option 
-                key={index} 
-                value={sizeOption.size} 
+              <button
+                key={index}
+                className={`size-button ${sizeOption.inStock === 0 ? 'out-of-stock' : ''} ${size === sizeOption.size ? 'selected' : ''}`}
+                onClick={() => setSize(sizeOption.size)}
                 disabled={sizeOption.inStock === 0} // Disable out-of-stock sizes
               >
                 {sizeOption.size} {sizeOption.inStock === 0 && '(Out of Stock)'}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
-        <button onClick={handleAddToCart} className="add-to-cart-button">
-          Add to Cart
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          className={`add-to-cart-button ${size ? 'active' : ''}`}
+        >
+          {size ? 'Add to Cart' : 'Select a Size'}
         </button>
       </div>
     </div>

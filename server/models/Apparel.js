@@ -40,6 +40,10 @@ const apparelSchema = new mongoose.Schema(
     views: {
       type: Number,
       default: 0,
+    }, 
+    featured: {
+      type: Boolean,
+      default: false,
     },
   },
   {

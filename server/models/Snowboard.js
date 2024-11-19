@@ -52,6 +52,10 @@ const snowboardSchema = new mongoose.Schema(
       type: Number,
       default: 0, // Default value for views
     },
+    featured: {
+      type: Boolean,
+      default: false, // Default value for featured
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

@@ -1,14 +1,40 @@
 const { AuthenticationError, ApolloError } = require('apollo-server-express');
-const { User, Snowboard, Apparel, Sales, siteStats, Cart } = require('../models');
+const { User, Snowboard, Apparel, SiteStats, Cart } = require('../models');
 const { signToken } = require('../utils/auth');
+const mongoose = require('mongoose');
+
 require('dotenv').config();  // Ensure environment variables are loaded
 
 const resolvers = {
   Query: {
-    getCart: async () => {
-      const cart = await Cart.findOne();
-      return cart ? cart.items : [];
+    getCart: async (_, __, { sessionID }) => {
+      const cart = await Cart.findOne({ sessionId: sessionID });
+    
+      if (!cart) {
+        return { id: null, sessionId: sessionID, items: [] };
+      }
+    
+      await Promise.all(
+        cart.items.map(async (item) => {
+          try {
+            // Normalize the type to PascalCase (e.g., "Snowboard")
+            const ProductModel = mongoose.model(item.type.charAt(0).toUpperCase() + item.type.slice(1));
+            const product = await ProductModel.findById(item.productId);
+    
+            if (product) {
+              item.name = product.name || item.name;
+              item.image = product.image || item.image;
+              item.price = product.price || item.price;
+            }
+          } catch (err) {
+            console.error(`Error fetching product for type: ${item.type}, productId: ${item.productId}`, err);
+          }
+        })
+      );
+    
+      return cart;
     },
+
     // Fetch a single user by ID
     getUser: async (_, { id }) => {
       try {
@@ -37,6 +63,10 @@ const resolvers = {
       return await Snowboard.find();
     },
 
+    getFeaturedSnowboards: async (_, { id }) => {
+      return await Snowboard.find({ featured: true });
+    },
+
     // Fetch a single apparel item by ID (not authenticated)
     getApparel: async (_, { id }) => {
       try {
@@ -51,6 +81,10 @@ const resolvers = {
       return await Apparel.find();
     },
 
+    getFeaturedApparel: async (_, { id }) => {
+      return await Apparel.find({ featured: true });
+    },
+
     topApparelByViews: async (_, { limit = 3 }) => {
       return await Apparel.find().sort({ views: -1 }).limit(limit);
     },
@@ -60,13 +94,12 @@ const resolvers = {
     },
 
     // General stats for the site (authenticated)
-    generalStats: async () => {
-      const stats = await siteStats.findOne();
-      const salesData = await Sales.aggregate([
-        { $group: { _id: { month: "$month", itemType: "$itemType" }, total: { $sum: "$amount" } } },
-      ]);
-
-      return { stats, salesData };
+    async getSiteStats() {
+      let stats = await SiteStats.findOne();
+      if (!stats) {
+        stats = await SiteStats.create({ totalViews: 0, uniqueVisits: 0 });
+      }
+      return stats;
     },
 
     // Snowboard-specific stats (authenticated)
@@ -87,81 +120,69 @@ const resolvers = {
   },
 
   Mutation: {
-    addToCart: async (_, { productId, quantity, size, type }, context) => {
-      try {
-        // Find the product (either snowboard or apparel)
-        let product;
-
-        if (type === 'snowboard') {
-          product = await Snowboard.findById(productId);
-          if (!product) {
-            throw new Error('Snowboard not found');
-          }
-        } else if (type === 'apparel') {
-          product = await Apparel.findById(productId);
-          if (!product) {
-            throw new Error('Apparel item not found');
-          }
-        }
-
-        // Ensure the size exists for apparel
-        if (type === 'apparel') {
-          const sizeObj = product.sizes.find(item => item.size === size);
-          if (!sizeObj || sizeObj.inStock < quantity) {
-            throw new Error('Not enough stock for this size');
-          }
-        }
-
-        // If no user is authenticated, use a session or anonymous cart
-        const cart = context.cart || [];  // Assume `context.cart` holds the user's cart or anonymous cart
-        const itemIndex = cart.findIndex(item => item.productId === productId && item.size === size);
-        
-        if (itemIndex !== -1) {
-          // Update the existing cart item
-          cart[itemIndex].quantity += quantity;
-        } else {
-          // Add new item to cart
-          cart.push({
-            productId,
-            quantity,
-            size,
-            onModel: type,  // 'snowboard' or 'apparel'
-          });
-        }
-
-        // Optionally, save the cart to the user model or session storage
-
-        return cart;  // Return the updated cart
-      } catch (error) {
-        console.error('Error adding to cart:', error);
-        throw new ApolloError(error.message);
+    addToCart: async (_, { input }, { sessionID }) => {
+      const { productId, quantity, name, size, type, image, price } = input;
+    
+      let cart = await Cart.findOne({ sessionId: sessionID });
+      if (!cart) {
+        cart = new Cart({ sessionId: sessionID, items: [] });
       }
-    },
-    removeFromCart: async (parent, { itemId }) => {
-      try {
-        // Find the user by their ID (adjust to however you're identifying the user)
-        // Assuming the cart is either stored globally or is being passed through session data
-        const user = await User.findOne({ /* your method to find the user, maybe based on session or other identifier */ });
-
-        // If no user or no cart found, return an error or empty cart response
-        if (!user || !user.cart) {
-          throw new Error('Cart not found');
-        }
-
-        // Remove the item from the cart by filtering it out
-        const updatedCart = user.cart.filter(item => item.productId.toString() !== itemId);
-
-        // Update the user's cart in the database
-        user.cart = updatedCart;
-        await user.save();
-
-        return user.cart; // Return the updated cart
-      } catch (error) {
-        throw new Error('Failed to remove item from cart: ' + error.message);
+    
+      const existingItemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+    
+      if (existingItemIndex > -1) {
+        cart.items[existingItemIndex].quantity += quantity;
+      } else {
+        cart.items.push({ productId, quantity, name, size, type, image, price });
       }
+    
+      await cart.save();
+      return cart;
     },
+    
+    removeFromCart: async (_, { input }, { sessionID }) => {
+      const { productId } = input;
+
+      // Find the cart using the session ID
+      const cart = await Cart.findOne({ sessionId: sessionID });
+
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+
+      // Filter out the item to remove it from the cart
+      cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+
+      // Save the updated cart
+      await cart.save();
+      return cart;
+    },
+
+    updateCartQuantity: async (_, { input }, { sessionID }) => {
+      const { productId, quantity } = input;
+    
+      if (quantity <= 0) {
+        throw new Error('Quantity must be greater than 0');
+      }
+    
+      const cart = await Cart.findOne({ sessionId: sessionID });
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+    
+      const item = cart.items.find(item => item.productId.toString() === productId);
+      if (!item) {
+        throw new Error('Item not found in cart');
+      }
+    
+      item.quantity = quantity;
+      await cart.save();
+    
+      return cart;
+    },
+
     // Create a new snowboard (authenticated)
-    createSnowboard: async (_, { picture, name, shape, sizes, flex, boardConstruction, price }) => {
+    createSnowboard: async (_, { picture, name, shape, sizes, flex, boardConstruction, price, featured }) => {
       const snowboard = new Snowboard({
         picture,
         name,
@@ -170,26 +191,28 @@ const resolvers = {
         flex,
         boardConstruction,
         price,
+        featured,
       });
       await snowboard.save();
       return snowboard;
     },
 
     // Create a new apparel item (authenticated)
-    createApparel: async (_, { pictures, name, style, sizes, price }) => {
+    createApparel: async (_, { pictures, name, style, sizes, price, featured }) => {
       const apparel = new Apparel({
         pictures,
         name,
         style,
         sizes: sizes.map(({ size, inStock }) => ({ size, inStock })),  // Map sizes to include inStock for each size
         price,
+        featured,
       });
       await apparel.save();
       return apparel;
     },
 
     // Update a snowboard (authenticated)
-    updateSnowboard: async (_, { id, input }) => {
+    updateSnowboard: async (_, { id, input, featured }) => {
       try {
         const snowboard = await Snowboard.findById(id);
         if (!snowboard) {
@@ -204,6 +227,10 @@ const resolvers = {
           }
         });
 
+        if (typeof featured !== 'undefined') {
+          snowboard.featured = featured;
+        }
+
         // Save the updated snowboard
         await snowboard.save();
         return snowboard;
@@ -213,28 +240,36 @@ const resolvers = {
     },
 
     // Update an apparel item (authenticated)
-    updateApparel: async (_, { id, input }) => {
+    updateApparel: async (_, { id, input, featured }) => {
+      console.log("Received input:", input);
+      console.log("Received featured:", featured);
+      
       try {
         const apparel = await Apparel.findById(id);
         if (!apparel) {
           throw new ApolloError("Apparel item not found.", "APPAREL_NOT_FOUND");
         }
-
-        // Update each size based on input
-        input.forEach(({ size, inStock }) => {
-          const sizeToUpdate = apparel.sizes.find(s => s.size === size);
-          if (sizeToUpdate) {
-            sizeToUpdate.inStock = inStock;
-          }
-        });
-
+    
+        if (input) {
+          input.forEach(({ size, inStock }) => {
+            const sizeToUpdate = apparel.sizes.find(s => s.size === size);
+            if (sizeToUpdate) {
+              sizeToUpdate.inStock = inStock;
+            }
+          });
+        }
+    
+        if (typeof featured !== "undefined") {
+          apparel.featured = featured;
+        }
+    
         await apparel.save();
         return apparel;
       } catch (error) {
-        throw new ApolloError(`Error updating apparel item: ${error.message}`, 'APPAREL_UPDATE_FAILED');
+        throw new ApolloError(`Error updating apparel item: ${error.message}`, "APPAREL_UPDATE_FAILED");
       }
     },
-
+    
     // Delete a snowboard (authenticated)
     deleteSnowboard: async (_, { id }) => {
       try {
@@ -302,6 +337,37 @@ const resolvers = {
         throw new Error(`Error incrementing views: ${error.message}`);
       }
     },
+        // Increment total views and unique visits
+      async incrementSiteStats(_, __, context) {
+        const sessionId = context.session.id; // Use the session ID from the context
+        if (!sessionId) {
+          throw new Error('Session ID not found.');
+        }
+  
+        // Fetch the stats document
+        let stats = await SiteStats.findOne();
+        if (!stats) {
+          stats = await SiteStats.create({ totalViews: 0, uniqueVisits: 0, uniqueSessions: [] });
+        }
+  
+        // Increment total views
+        stats.totalViews += 1;
+  
+        // Check if the session is new
+        if (!stats.uniqueSessions.includes(sessionId)) {
+          stats.uniqueSessions.push(sessionId);
+          stats.uniqueVisits += 1; // Increment unique visits for a new session
+        }
+  
+        // Save the updated stats
+        await stats.save();
+  
+        return {
+          totalVisitors: stats.totalViews,
+          uniqueVisits: stats.uniqueVisits,
+        };
+      },
+    
     // Login mutation to authenticate user and return JWT token
     login: async (parent, { username, password }) => {
       const user = await User.findOne({ username });

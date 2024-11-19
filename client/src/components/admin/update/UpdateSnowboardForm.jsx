@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { UPDATE_SNOWBOARD } from '../../../utils/mutations'; // Adjust the path if necessary
+import SuccessPopup from '../../SuccessPopup';
 
 const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
   const [sizes, setSizes] = useState(item.sizes);
-
+  const [featuredStatus, setFeaturedStatus] = useState(item.featured ? "Yes" : "No"); // Handle featured status
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for success popup
+  const [isPopupClosed, setIsPopupClosed] = useState(false); // Track if the popup is closed manually
+  
   // Set up the mutation
   const [updateSnowboard, { error }] = useMutation(UPDATE_SNOWBOARD);
 
@@ -15,6 +19,10 @@ const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
     setSizes(updatedSizes);
   };
 
+  const handleFeaturedChange = (e) => {
+    setFeaturedStatus(e.target.value);
+  };
+
   const handleUpdate = async () => {
     try {
       // Call the mutation with the updated sizes
@@ -22,22 +30,32 @@ const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
         variables: {
           id: item._id,
           input: sizes.map(({ size, inStock }) => ({ size, inStock })), // Ensure the input structure matches the mutation requirements
+          featured: featuredStatus === "Yes",
         },
       });
 
-      if (data) {
-        onUpdate(sizes); // Pass updated sizes to parent component
-      }
-      onClose(); // Close the popup after updating
+      setShowSuccessPopup(true); // Show the success popup
+
+      // Set a timeout to automatically close the popup and the form after 2.5 seconds
+      setTimeout(() => {
+        if (!isPopupClosed) {
+          onClose(); // Close the form if the popup wasn't closed manually
+        }
+      }, 2500);
     } catch (err) {
-      console.error("Failed to update snowboard stock:", error || err);
+      console.error("Failed to update snowboard stock:", err);
     }
+  };
+
+  const handlePopupClose = () => {
+    setIsPopupClosed(true); // Manually close the popup and prevent timeout from triggering
+    onClose(); // Close the form
   };
 
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <h2>Update Stock for {item.name}</h2>
+        <h2>UUpdate Stock and Featured Status for {item.name}</h2>
         <ul>
           {sizes.map((size, index) => (
             <li key={index}>
@@ -50,9 +68,24 @@ const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
             </li>
           ))}
         </ul>
+        <div className="featured-status">
+          <label>Featured:</label>
+          <select value={featuredStatus} onChange={handleFeaturedChange}>
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
         <button onClick={handleUpdate}>Update</button>
         <button onClick={onClose}>Cancel</button>
         {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
+
+        {/* Show success popup */}
+        {showSuccessPopup && (
+          <SuccessPopup
+            message={`${item.name} has been updated!`}
+            onClose={handlePopupClose} // Close the popup and form when manually closed
+          />
+        )}
       </div>
     </div>
   );

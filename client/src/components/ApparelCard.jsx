@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Use this instead of useHistory
-import '../styles/productCard.css';
+import '../styles/ProductCard.css';
 
 const ApparelCard = ({ apparel }) => {
   const navigate = useNavigate(); // This replaces useHistory
@@ -19,7 +19,7 @@ const ApparelCard = ({ apparel }) => {
         />
       </div>
       <div className="product-details">
-        <h3 className="product-name">{apparel.name}</h3>
+        <h2 className="product-name">{apparel.name}</h2>
         <p className="product-price">${apparel.price}</p>
       </div>
     </div>

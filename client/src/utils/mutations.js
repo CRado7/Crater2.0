@@ -39,7 +39,8 @@ export const CREATE_SNOWBOARD = gql`
     $sizes: [SnowboardSizeInput!]!,
     $flex: String!,
     $boardConstruction: String!,
-    $price: Float!
+    $price: Float!,
+    $featured: Boolean
   ) {
     createSnowboard(
       picture: $picture,
@@ -48,7 +49,8 @@ export const CREATE_SNOWBOARD = gql`
       sizes: $sizes,
       flex: $flex,
       boardConstruction: $boardConstruction,
-      price: $price
+      price: $price,
+      featured: $featured
     ) {
       _id
       picture
@@ -61,6 +63,7 @@ export const CREATE_SNOWBOARD = gql`
       flex
       boardConstruction
       price
+      featured
     }
   }
 `;
@@ -72,14 +75,16 @@ export const CREATE_APPAREL = gql`
     $name: String!,
     $style: String!,
     $sizes: [ApparelSizeInput!]!,
-    $price: Float!
+    $price: Float!,
+    $featured: Boolean!
   ) {
     createApparel(
       pictures: $pictures,
       name: $name,
       style: $style,
       sizes: $sizes,
-      price: $price
+      price: $price,
+      featured: $featured
     ) {
       _id
       pictures
@@ -90,14 +95,15 @@ export const CREATE_APPAREL = gql`
         inStock
       }
       price
+      featured
     }
   }
 `;
 
 // Mutation to update a snowboard
 export const UPDATE_SNOWBOARD = gql`
-  mutation UpdateSnowboard($id: ID!, $input: [SnowboardSizeInput!]!) {
-    updateSnowboard(id: $id, input: $input) {
+  mutation UpdateSnowboard($id: ID!, $input: [SnowboardSizeInput!]!, $featured: Boolean) {
+    updateSnowboard(id: $id, input: $input, featured: $featured) {
       _id
       picture
       name
@@ -109,14 +115,15 @@ export const UPDATE_SNOWBOARD = gql`
       flex
       boardConstruction
       price
+      featured
     }
   }
 `;
 
 // Mutation to update an apparel item
 export const UPDATE_APPAREL = gql`
-  mutation UpdateApparel($id: ID!, $input: [ApparelSizeInput!]!) {
-    updateApparel(id: $id, input: $input) {
+  mutation UpdateApparel($id: ID!, $input: [ApparelSizeInput!]!, $featured: Boolean) {
+    updateApparel(id: $id, input: $input, featured: $featured) {
       _id
       pictures
       name
@@ -126,6 +133,7 @@ export const UPDATE_APPAREL = gql`
         inStock
       }
       price
+      featured
     }
   }
 `;
@@ -168,30 +176,60 @@ export const INCREMENT_SNOWBOARD_VIEWS = gql`
   }
 `;
 
+export const INCREMENT_SITE_STATS = gql`
+  mutation IncrementSiteStats {
+    incrementSiteStats {
+      totalVisitors
+      uniqueVisits
+    }
+  }
+`;
+
 export const ADD_TO_CART = gql`
-  mutation addToCart($productId: ID!, $quantity: Int!, $type: String!, $size: String!) {
-    addToCart(productId: $productId, quantity: $quantity, type: $type, size: $size) {
-      productId
-      quantity
-      size
-      onModel
+  mutation AddToCart($input: AddToCartInput!) {
+    addToCart(input: $input) {
+      id
+      sessionId
+      items {
+        productId
+        quantity
+        name
+        size
+        type
+        price
+        image
+      }
     }
   }
 `;
 
 export const REMOVE_FROM_CART = gql`
-  mutation removeFromCart($itemId: ID!) {
-    removeFromCart(itemId: $itemId) {
-      _id
+  mutation RemoveFromCart($input: RemoveFromCartInput!) {
+    removeFromCart(input: $input) {
+      id
+      sessionId
       items {
         productId
         quantity
-        size
-        onModel
       }
     }
   }
 `;
+
+export const UPDATE_CART_QUANTITY = gql`
+  mutation UpdateCartQuantity($input: UpdateCartQuantityInput!) {
+    updateCartQuantity(input: $input) {
+      id
+      sessionId
+      items {
+        productId
+        quantity
+      }
+    }
+  }
+`;
+
+
 
 
 

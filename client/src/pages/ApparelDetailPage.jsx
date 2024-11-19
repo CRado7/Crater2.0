@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation} from '@apollo/client';
-import { GET_APPAREL } from '../utils/queries';
-import { INCREMENT_APPAREL_VIEWS } from '../utils/mutations';
-import '../styles/ApparelDetailPage.css';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_APPAREL } from '../utils/queries'; // GraphQL query to fetch apparel data
+import { ADD_TO_CART } from '../utils/mutations'; // GraphQL mutation to add items to cart
+import { INCREMENT_APPAREL_VIEWS } from '../utils/mutations'; // Optional: Increment views
+import '../styles/ProductDetailsPage.css';
 
 const ApparelDetailPage = () => {
   const { id } = useParams(); // Get the product ID from the URL
@@ -11,8 +12,10 @@ const ApparelDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(''); // Initialize size state
-  const [incrementApparelViews] = useMutation(INCREMENT_APPAREL_VIEWS);
+  const [incrementApparelViews] = useMutation(INCREMENT_APPAREL_VIEWS); // Optional: Increment views
+  const [addToCart] = useMutation(ADD_TO_CART); // GraphQL mutation to add item to the cart
 
+  // Increment views for apparel item on mount
   useEffect(() => {
     incrementApparelViews({ variables: { id } })
       .then((response) => {
@@ -35,8 +38,8 @@ const ApparelDetailPage = () => {
     });
   };
 
-  // Handle add to cart
-  const handleAddToCart = () => {
+  // Handle add to cart with GraphQL mutation
+  const handleAddToCart = async () => {
     if (!size) {
       alert('Please select a size!');
       return;
@@ -50,31 +53,26 @@ const ApparelDetailPage = () => {
       return;
     }
 
-    // Retrieve cart from local storage or initialize an empty array
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Check if item with same ID and size is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.productId === id && item.size === size);
-
-    if (existingItemIndex >= 0) {
-      // If item already exists, update its quantity
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      // Otherwise, add new item to cart
-      cart.push({
-        productId: id,
-        name: data.getApparel.name,
-        price: data.getApparel.price,
-        quantity,
-        size,
-        type,
-        image: data.getApparel.pictures[0],
+    try {
+      // Use GraphQL mutation to add the item to the cart
+      await addToCart({
+        variables: {
+          input: {
+            productId: id,
+            name: data.getApparel.name,
+            price: data.getApparel.price,
+            quantity,
+            size,
+            type,
+            image: data.getApparel.pictures[0], // Use the first image
+          },
+        },
       });
-    }
 
-    // Save updated cart to local storage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Item added to cart!');
+      alert('Item added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -83,7 +81,7 @@ const ApparelDetailPage = () => {
   const apparel = data.getApparel;
 
   return (
-    <div className="apparel-detail-container">
+    <div className="product-details-container">
       <div className="image-container">
         {apparel.pictures.length > 1 && (
           <>
@@ -103,11 +101,11 @@ const ApparelDetailPage = () => {
       </div>
 
       <div className="product-info">
+        <p>{apparel.style}</p>
         <h1>{apparel.name}</h1>
         <p className="product-price">${apparel.price}</p>
-        <p>{apparel.style}</p>
 
-        {/* Add quantity and size selection */}
+        {/* Add quantity selection */}
         <div className="quantity">
           <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
           <span>{quantity}</span>
@@ -116,28 +114,27 @@ const ApparelDetailPage = () => {
 
         {/* Size Selection */}
         <div className="size-selection">
-          <label htmlFor="size">Size: </label>
-          <select
-            id="size"
-            onChange={(e) => setSize(e.target.value)} // Update size state
-            value={size} // Controlled input
-          >
-            <option value="">Select Size</option> {/* Default option */}
+          <label htmlFor="size"></label>
+          <div className="size-buttons">
             {apparel.sizes.map((sizeOption, index) => (
-              <option 
-                key={index} 
-                value={sizeOption.size} 
+              <button
+                key={index}
+                className={`size-button ${sizeOption.inStock === 0 ? 'out-of-stock' : ''} ${size === sizeOption.size ? 'selected' : ''}`}
+                onClick={() => setSize(sizeOption.size)}
                 disabled={sizeOption.inStock === 0} // Disable out-of-stock sizes
               >
-                {sizeOption.size} {sizeOption.inStock === 0 && '(Out of Stock)'}
-              </option>
+                {sizeOption.size}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
         {/* Add to Cart Button */}
-        <button onClick={handleAddToCart} className="add-to-cart-button">
-          Add to Cart
+        <button
+          onClick={handleAddToCart}
+          className={`add-to-cart-button ${size ? 'active' : ''}`}
+        >
+          {size ? 'Add to Cart' : 'Select a Size'}
         </button>
       </div>
     </div>

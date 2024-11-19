@@ -4,6 +4,7 @@ import { GET_ALL_SNOWBOARDS } from '../../utils/queries'; // Adjust path as need
 import { DELETE_SNOWBOARD } from '../../utils/mutations'; // Adjust path as needed
 import DeleteSnowboardForm from '../admin/delete/DeleteSnowboardForm'; // Adjust path as needed
 import UpdateSnowboardForm from '../admin/update/UpdateSnowboardForm'; // Adjust path as needed
+import '../../styles/ProductCard.css'; // Import styles
 
 const AdminSnowboardCard = () => {
   const { loading, error, data } = useQuery(GET_ALL_SNOWBOARDS);
@@ -47,16 +48,18 @@ const AdminSnowboardCard = () => {
             <ul>
               {snowboard.sizes.map((size, index) => (
                 <li key={index} className="size-item">
-                  <span className="size-stock">{size.inStock || 'N/A'}</span>
-                  <span>{size.size}</span>
+                  <span>{size.size}: </span>
+                  <span className="size-stock">{size.inStock || 0}</span>
                 </li>
               ))}
             </ul>
           </div>
+          <h3>${snowboard.price}</h3>
+          <p>Featured: {snowboard.featured ? "Yes" : "No"}</p>
 
           {/* Buttons to trigger delete and update popups */}
           <button onClick={() => setShowDeletePopup(snowboard)}>Delete</button>
-          <button onClick={() => setShowUpdatePopup(snowboard)}>Update Stock</button>
+          <button onClick={() => setShowUpdatePopup(snowboard)}>Update Board</button>
         </div>
       ))}
 

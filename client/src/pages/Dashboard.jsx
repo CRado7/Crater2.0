@@ -1,11 +1,9 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import AuthService from '../utils/auth';
-import { GET_GENERAL_STATS } from '../utils/queries'; // Import your queries
-import { GET_TOP_APPAREL, GET_TOP_SNOWBOARD } from '../utils/queries';
-import AdminSnowboardCard from '../components/admin/AdminSnowboardCard'; // Import your components
+import { GET_SITE_STATS, GET_TOP_APPAREL, GET_TOP_SNOWBOARD } from '../utils/queries';
+import AdminSnowboardCard from '../components/admin/AdminSnowboardCard';
 import AdminApparelCard from '../components/admin/AdminApparelCard';
 import AddSnowboardForm from '../components/admin/add/AddSnowboardForm';
 import AddApparelForm from '../components/admin/add/AddApparelForm';
@@ -13,43 +11,46 @@ import AddApparelForm from '../components/admin/add/AddApparelForm';
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('general');
+  const [showForm, setShowForm] = useState(false);
+
+  const { data: generalData } = useQuery(GET_SITE_STATS, { skip: activeTab !== 'general' });
+  const { data: topSnowboardData } = useQuery(GET_TOP_SNOWBOARD, { variables: { limit: 1 }, skip: activeTab !== 'snowboards' });
+  const { data: topApparelData } = useQuery(GET_TOP_APPAREL, { variables: { limit: 3 }, skip: activeTab !== 'apparel' });
 
   useEffect(() => {
     if (!AuthService.loggedIn()) {
-      navigate('/login'); // Redirect to login if the user is not logged in
+      navigate('/login');
     }
   }, [navigate]);
 
-  const [showForm, setShowForm] = useState(false);
+  const handleAddBoardClick = () => setShowForm(true);
+  const closeForm = () => setShowForm(false);
 
-  // GraphQL queries for each tab's data
-  const { data: generalData } = useQuery(GET_GENERAL_STATS, {
-    skip: activeTab !== 'general'
-  });
-  const { data: topSnowboardData } = useQuery(GET_TOP_SNOWBOARD, {
-    variables: { limit: 1 },
-    skip: activeTab !== 'snowboards'
-  });
-  const { data: topApparelData } = useQuery(GET_TOP_APPAREL, {
-    variables: { limit: 3 },
-    skip: activeTab !== 'apparel'
-  });
+  const renderSiteStats = () => {
+    if (!generalData) return <p>Loading general stats...</p>;
 
-  const handleAddBoardClick = () => {
-    setShowForm(true); // Show the form when the button is clicked
+    const stats = generalData.getSiteStats;
+    if (!stats) return <p>No stats available.</p>;
+
+    return (
+      <div>
+        <h2>General Stats</h2>
+        <div className="stats-cards">
+          {/* Card 1: Total Visitors */}
+          <div className="stats-card">
+            <h3>Total Site Visitors</h3>
+            <p>{stats.totalViews ?? 'Data not available'}</p>
+          </div>
+
+          {/* Card 2: Unique Visits */}
+          <div className="stats-card">
+            <h3>Unique Visits</h3>
+            <p>{stats.uniqueVisits ?? 'Data not available'}</p>
+          </div>
+        </div>
+      </div>
+    );
   };
-
-  const closeForm = () => {
-    setShowForm(false); // Close the form
-  };
-
-  // Rendering functions for each tab's data
-  const renderGeneralStats = () => (
-    <div>
-      <h2>General Stats</h2>
-      <p>Total Site Visitors: {generalData?.generalStats?.stats?.totalVisitors ?? 'Data not available'}</p>
-    </div>
-  );
 
   const renderSnowboardStats = () => (
     <div>
@@ -58,13 +59,14 @@ const AdminDashboard = () => {
         <h3>Most Viewed Board</h3>
         {topSnowboardData && topSnowboardData.topSnowboardByViews && topSnowboardData.topSnowboardByViews.length > 0 ? (
           <div>
-            {topSnowboardData.topSnowboardByViews[0].picture && topSnowboardData.topSnowboardByViews[0].picture.length > 0 && (
-              <img 
-                src={topSnowboardData.topSnowboardByViews[0].picture[0]} // Access the first image in the array
-                alt={topSnowboardData.topSnowboardByViews[0].name} 
-                style={{ width: '50px' }} 
-              />
-            )}
+            {topSnowboardData.topSnowboardByViews[0].picture &&
+              topSnowboardData.topSnowboardByViews[0].picture.length > 0 && (
+                <img
+                  src={topSnowboardData.topSnowboardByViews[0].picture[0]}
+                  alt={topSnowboardData.topSnowboardByViews[0].name}
+                  style={{ width: '50px' }}
+                />
+              )}
             <p>Name: {topSnowboardData.topSnowboardByViews[0].name}</p>
             <p>Views: {topSnowboardData.topSnowboardByViews[0].views}</p>
             <p>Price: ${topSnowboardData.topSnowboardByViews[0].price}</p>
@@ -74,7 +76,6 @@ const AdminDashboard = () => {
         )}
       </div>
 
-
       <div className="cards">
         <button onClick={handleAddBoardClick}>Add A New Board</button>
 
@@ -83,7 +84,7 @@ const AdminDashboard = () => {
         <AdminSnowboardCard />
       </div>
     </div>
-  );  
+  );
 
   const renderApparelStats = () => (
     <div>
@@ -109,18 +110,17 @@ const AdminDashboard = () => {
       <div className="cards">
         <button onClick={handleAddBoardClick}>Add New Apparel</button>
 
-        {/* Show the AddSnowboardForm component when showForm is true */}
+        {/* Show the AddApparelForm component when showForm is true */}
         {showForm && <AddApparelForm closeForm={closeForm} />}
         <AdminApparelCard />
       </div>
     </div>
   );
-  
 
   return (
     <div>
       <h1>Admin Dashboard</h1>
-      
+
       {/* Tab Navigation */}
       <div className="tab-buttons">
         <button onClick={() => setActiveTab('general')}>General</button>
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
 
       {/* Tab Content */}
       <div className="tab-content">
-        {activeTab === 'general' && renderGeneralStats()}
+        {activeTab === 'general' && renderSiteStats()}
         {activeTab === 'snowboards' && renderSnowboardStats()}
         {activeTab === 'apparel' && renderApparelStats()}
       </div>
