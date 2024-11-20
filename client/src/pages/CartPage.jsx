@@ -77,7 +77,7 @@ const CartPage = () => {
           return (
             <div key={item.productId} className="cart-item">
               <div className="cart-item-details">
-                <img src={item.image} alt={item.name} />
+                <img src={item.picture} alt={item.name} />
                 <p>{item.name}</p>
                 <p>${item.price} per unit</p>
                 <p>Total: ${itemTotal.toFixed(2)}</p>

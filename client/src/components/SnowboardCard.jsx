@@ -30,9 +30,9 @@ const SnowboardCard = ({ snowboard }) => {
   return (
     <div className="product-card" onClick={handleCardClick}>
       <div className="product-image-container">
-        {snowboard?.picture && (
+        {snowboard?.pictures && (
           <img
-            src={snowboard.picture} // Image URL for the snowboard item
+            src={snowboard.pictures[0]} // Image URL for the snowboard item
             alt={snowboard.name} // Name as alt text for image
             className="product-image"
           />

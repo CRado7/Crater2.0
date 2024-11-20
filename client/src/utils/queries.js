@@ -26,7 +26,7 @@ export const GET_SNOWBOARD = gql`
   query GetSnowboard($id: ID!) {
     getSnowboard(id: $id) {
       _id
-      picture
+      pictures
       name
       shape
       sizes {
@@ -45,7 +45,7 @@ export const GET_ALL_SNOWBOARDS = gql`
   query GetAllSnowboards {
     getAllSnowboards {
       _id
-      picture
+      pictures
       name
       shape
       sizes {
@@ -100,7 +100,7 @@ export const GET_FEATURED_SNOWBOARDS = gql`
   query GetFeaturedSnowboards {
     getFeaturedSnowboards {
       _id
-      picture
+      pictures
       name
       shape
       sizes {
@@ -181,7 +181,7 @@ export const GET_CART = gql`
         name
         size
         type
-        image
+        picture
         price
       }
     }
@@ -208,7 +208,7 @@ export const GET_TOP_SNOWBOARD = gql`
       _id
       name
       views
-      picture
+      pictures
       price
       featured
     }

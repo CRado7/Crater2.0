@@ -38,7 +38,7 @@ const AdminSnowboardCard = () => {
       {data.getAllSnowboards.map((snowboard) => (
         <div key={snowboard._id} className="snowboard-card">
           <img
-            src={snowboard.picture[0]}
+            src={snowboard.pictures[0]}
             alt={snowboard.name}
             className="snowboard-picture"
           />

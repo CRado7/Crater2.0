@@ -62,7 +62,7 @@ const SnowboardDetailPage = () => {
             quantity,
             size,
             type,
-            image: data.getSnowboard.picture[0], // Use the first image
+            picture: data.getSnowboard.pictures[0], // Use the first image
           },
         },
       });
@@ -82,7 +82,7 @@ const SnowboardDetailPage = () => {
   return (
     <div className="product-details-container">
       <div className="image-container">
-        {snowboard.picture.length > 1 && (
+        {snowboard.pictures.length > 1 && (
           <>
             <button className="nav-button prev" onClick={() => handleImageNavigation('prev')}>
               &#8592;
@@ -93,7 +93,7 @@ const SnowboardDetailPage = () => {
           </>
         )}
         <img
-          src={snowboard.picture[currentImageIndex]}
+          src={snowboard.pictures[currentImageIndex]}
           alt={snowboard.name}
           className="product-image"
         />

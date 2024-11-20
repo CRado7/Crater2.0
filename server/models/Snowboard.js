@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the schema for the snowboard
 const snowboardSchema = new mongoose.Schema(
   {
-    picture: {
+    pictures: {
       type: [String], // Array of strings to store multiple image URLs
       required: true,
     },

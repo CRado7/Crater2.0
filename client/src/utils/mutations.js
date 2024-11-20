@@ -33,7 +33,7 @@ export const LOGOUT = gql`
 // Mutation to create a new snowboard with the `SnowboardSizeInput` input type
 export const CREATE_SNOWBOARD = gql`
   mutation CreateSnowboard(
-    $picture: [String!],
+    $pictures: [String!],
     $name: String!,
     $shape: String!,
     $sizes: [SnowboardSizeInput!]!,
@@ -43,7 +43,7 @@ export const CREATE_SNOWBOARD = gql`
     $featured: Boolean
   ) {
     createSnowboard(
-      picture: $picture,
+      pictures: $pictures,
       name: $name,
       shape: $shape,
       sizes: $sizes,
@@ -53,7 +53,7 @@ export const CREATE_SNOWBOARD = gql`
       featured: $featured
     ) {
       _id
-      picture
+      pictures
       name
       shape
       sizes {
@@ -105,7 +105,7 @@ export const UPDATE_SNOWBOARD = gql`
   mutation UpdateSnowboard($id: ID!, $input: [SnowboardSizeInput!]!, $featured: Boolean) {
     updateSnowboard(id: $id, input: $input, featured: $featured) {
       _id
-      picture
+      pictures
       name
       shape
       sizes {
@@ -143,7 +143,7 @@ export const DELETE_SNOWBOARD = gql`
     deleteSnowboard(id: $id) {
       _id
       name
-      picture
+      pictures
     }
   }
 `;
@@ -179,7 +179,7 @@ export const INCREMENT_SNOWBOARD_VIEWS = gql`
 export const INCREMENT_SITE_STATS = gql`
   mutation IncrementSiteStats {
     incrementSiteStats {
-      totalVisitors
+      totalViews
       uniqueVisits
     }
   }
@@ -197,7 +197,7 @@ export const ADD_TO_CART = gql`
         size
         type
         price
-        image
+        picture
       }
     }
   }

@@ -23,7 +23,7 @@ const resolvers = {
     
             if (product) {
               item.name = product.name || item.name;
-              item.image = product.image || item.image;
+              item.picture = product.picture || item.picture;
               item.price = product.price || item.price;
             }
           } catch (err) {
@@ -121,7 +121,7 @@ const resolvers = {
 
   Mutation: {
     addToCart: async (_, { input }, { sessionID }) => {
-      const { productId, quantity, name, size, type, image, price } = input;
+      const { productId, quantity, name, size, type, picture, price } = input;
     
       let cart = await Cart.findOne({ sessionId: sessionID });
       if (!cart) {
@@ -133,7 +133,7 @@ const resolvers = {
       if (existingItemIndex > -1) {
         cart.items[existingItemIndex].quantity += quantity;
       } else {
-        cart.items.push({ productId, quantity, name, size, type, image, price });
+        cart.items.push({ productId, quantity, name, size, type, picture, price });
       }
     
       await cart.save();
@@ -182,9 +182,9 @@ const resolvers = {
     },
 
     // Create a new snowboard (authenticated)
-    createSnowboard: async (_, { picture, name, shape, sizes, flex, boardConstruction, price, featured }) => {
+    createSnowboard: async (_, { pictures, name, shape, sizes, flex, boardConstruction, price, featured }) => {
       const snowboard = new Snowboard({
-        picture,
+        pictures,
         name,
         shape,
         sizes: sizes.map(({ size, inStock }) => ({ size, inStock })),  // Map sizes to include inStock for each size
@@ -363,7 +363,7 @@ const resolvers = {
         await stats.save();
   
         return {
-          totalVisitors: stats.totalViews,
+          totalViews: stats.totalViews,
           uniqueVisits: stats.uniqueVisits,
         };
       },

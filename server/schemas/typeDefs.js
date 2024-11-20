@@ -14,7 +14,7 @@ const typeDefs = gql`
 
   type Snowboard {
     _id: ID
-    picture: [String!]!
+    pictures: [String!]!
     name: String!
     shape: String!
     sizes: [SnowboardSize!]!
@@ -47,7 +47,7 @@ const typeDefs = gql`
     name: String!
     size: String!
     type: String!
-    image: String!
+    picture: String!
     price: Float!
   }
 
@@ -89,7 +89,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    # User-related queries
     getUser(_id: ID!): User
     getAllUsers: [User!]!
 
@@ -106,6 +105,7 @@ const typeDefs = gql`
     
     topApparelByViews(limit: Int): [Apparel]
     topSnowboardByViews(limit: Int): [Snowboard]
+
     getFeaturedApparel: [Apparel]
     getFeaturedSnowboards: [Snowboard]
   }
@@ -114,13 +114,9 @@ const typeDefs = gql`
     createUser(username: String!, password: String!): User!
     login(username: String!, password: String!): Auth
     logout: String!
-    addToCart(input: AddToCartInput!): Cart
-    removeFromCart(input: RemoveFromCartInput!): Cart
-    incrementApparelViews(_id: ID!): Apparel
-    incrementSnowboardViews(_id: ID!): Snowboard
     
     createSnowboard(
-      picture: [String!], 
+      pictures: [String!], 
       name: String!, 
       shape: String!, 
       sizes: [SnowboardSizeInput!]!, 
@@ -139,15 +135,20 @@ const typeDefs = gql`
         featured: Boolean
         ): Apparel!
         
-        updateSnowboard(id: ID!, input: [SnowboardSizeInput!]!, featured: Boolean): Snowboard
-        updateApparel(id: ID!, input: [ApparelSizeInput!]!, featured: Boolean): Apparel
-        updateCartQuantity(input: UpdateCartQuantityInput!): Cart
-
-        deleteSnowboard(id: ID!): Snowboard
-        deleteApparel(id: ID!): Apparel
-
-        incrementSiteStats: SiteStats!
-      }
+      addToCart(input: AddToCartInput!): Cart
+      removeFromCart(input: RemoveFromCartInput!): Cart
+      
+      updateSnowboard(id: ID!, input: [SnowboardSizeInput!]!, featured: Boolean): Snowboard
+      updateApparel(id: ID!, input: [ApparelSizeInput!]!, featured: Boolean): Apparel
+      updateCartQuantity(input: UpdateCartQuantityInput!): Cart
+      
+      deleteSnowboard(id: ID!): Snowboard
+      deleteApparel(id: ID!): Apparel
+        
+      incrementApparelViews(_id: ID!): Apparel
+      incrementSnowboardViews(_id: ID!): Snowboard
+      incrementSiteStats: SiteStats!
+    }
 
 
     input SnowboardSizeInput {
@@ -167,7 +168,7 @@ const typeDefs = gql`
       name: String!
       size: String!
       type: String!
-      image: String!
+      picture: String!
       price: Float!
     }
 

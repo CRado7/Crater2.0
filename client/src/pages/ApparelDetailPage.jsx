@@ -64,7 +64,7 @@ const ApparelDetailPage = () => {
             quantity,
             size,
             type,
-            image: data.getApparel.pictures[0], // Use the first image
+            picture: data.getApparel.pictures[0], // Use the first image
           },
         },
       });

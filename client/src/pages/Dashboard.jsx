@@ -59,10 +59,10 @@ const AdminDashboard = () => {
         <h3>Most Viewed Board</h3>
         {topSnowboardData && topSnowboardData.topSnowboardByViews && topSnowboardData.topSnowboardByViews.length > 0 ? (
           <div>
-            {topSnowboardData.topSnowboardByViews[0].picture &&
-              topSnowboardData.topSnowboardByViews[0].picture.length > 0 && (
+            {topSnowboardData.topSnowboardByViews[0].pictures &&
+              topSnowboardData.topSnowboardByViews[0].pictures.length > 0 && (
                 <img
-                  src={topSnowboardData.topSnowboardByViews[0].picture[0]}
+                  src={topSnowboardData.topSnowboardByViews[0].pictures[0]}
                   alt={topSnowboardData.topSnowboardByViews[0].name}
                   style={{ width: '50px' }}
                 />

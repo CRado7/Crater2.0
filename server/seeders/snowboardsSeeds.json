@@ -1,8 +1,8 @@
 [
   {
-    "picture": [
-      "https://example.com/images/snowboard1.jpg",
-      "https://example.com/images/snowboard1-alt.jpg"
+    "pictures": [
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/The_Apex-01_h56xu7.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/The_Apex-02_i5vxps.png"
     ],
     "name": "The Apex",
     "shape": "directional",
@@ -22,9 +22,9 @@
     "featured": true
   },
   {
-    "picture": [
-      "https://example.com/images/snowboard2.jpg",
-      "https://example.com/images/snowboard2-alt.jpg"
+    "pictures": [
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Stealth_X-01_tkixle.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Stealth_X-02_kshwzj.png"
     ],
     "name": "Stealth X",
     "shape": "twin",
@@ -44,9 +44,9 @@
     "featured": false
   },
   {
-    "picture": [
-      "https://example.com/images/snowboard3.jpg",
-      "https://example.com/images/snowboard3-alt.jpg"
+    "pictures": [
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Stormrider_3000-01_piuova.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Stormrider_3000-02_arrdov.png"
     ],
     "name": "Stormrider 3000",
     "shape": "directional-twin",
@@ -66,9 +66,9 @@
     "featured":false
   },
   {
-    "picture": [
-      "https://example.com/images/snowboard4.jpg",
-      "https://example.com/images/snowboard4-alt.jpg"
+    "pictures": [
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Power_Master-01_kyxqud.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/Power_Master-02_oofhxh.png"
     ],
     "name": "Powder Master",
     "shape": "directional-powder",
