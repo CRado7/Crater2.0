@@ -1,60 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_APPAREL } from '../utils/queries'; // GraphQL query to fetch apparel data
-import { ADD_TO_CART } from '../utils/mutations'; // GraphQL mutation to add items to cart
-import { INCREMENT_APPAREL_VIEWS } from '../utils/mutations'; // Optional: Increment views
+import { GET_APPAREL } from '../utils/queries';
+import { ADD_TO_CART, INCREMENT_APPAREL_VIEWS } from '../utils/mutations';
 import '../styles/ProductDetailsPage.css';
 
 const ApparelDetailPage = () => {
-  const { id } = useParams(); // Get the product ID from the URL
+  const { id } = useParams();
   const { loading, error, data } = useQuery(GET_APPAREL, { variables: { id } });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState(''); // Initialize size state
-  const [incrementApparelViews] = useMutation(INCREMENT_APPAREL_VIEWS); // Optional: Increment views
-  const [addToCart] = useMutation(ADD_TO_CART); // GraphQL mutation to add item to the cart
+  const [size, setSize] = useState('');
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0, show: false });
 
-  // Increment views for apparel item on mount
+  const [incrementApparelViews] = useMutation(INCREMENT_APPAREL_VIEWS);
+  const [addToCart] = useMutation(ADD_TO_CART);
+
   useEffect(() => {
-    incrementApparelViews({ variables: { id } })
-      .then((response) => {
-        console.log('Views incremented:', response);
-      })
-      .catch((err) => {
-        console.error('Error incrementing views:', err);
-      });
+    incrementApparelViews({ variables: { id } });
   }, [id, incrementApparelViews]);
 
-  // Handle image navigation
   const handleImageNavigation = (direction) => {
     setCurrentImageIndex((prevIndex) => {
       if (direction === 'next') {
         return (prevIndex + 1) % data.getApparel.pictures.length;
       }
-      if (direction === 'prev') {
-        return (prevIndex - 1 + data.getApparel.pictures.length) % data.getApparel.pictures.length;
-      }
+      return (prevIndex - 1 + data.getApparel.pictures.length) % data.getApparel.pictures.length;
     });
   };
 
-  // Handle add to cart with GraphQL mutation
+  const handleZoom = (e) => {
+    const { offsetX, offsetY, target } = e.nativeEvent;
+    const { offsetWidth, offsetHeight } = target;
+
+    const x = (offsetX / offsetWidth) * 100;
+    const y = (offsetY / offsetHeight) * 100;
+
+    setZoomPosition({ x, y, show: true });
+  };
+
+  const handleZoomOut = () => {
+    setZoomPosition({ ...zoomPosition, show: false });
+  };
+
   const handleAddToCart = async () => {
     if (!size) {
       alert('Please select a size!');
       return;
     }
-
     const type = 'apparel';
-    const selectedSize = data.getApparel.sizes.find((s) => s.size === size);
-
-    if (selectedSize && selectedSize.inStock < quantity) {
-      alert('Sorry, not enough stock for this size!');
-      return;
-    }
-
     try {
-      // Use GraphQL mutation to add the item to the cart
       await addToCart({
         variables: {
           input: {
@@ -64,11 +59,10 @@ const ApparelDetailPage = () => {
             quantity,
             size,
             type,
-            picture: data.getApparel.pictures[0], // Use the first image
+            picture: data.getApparel.pictures[0],
           },
         },
       });
-
       alert('Item added to cart!');
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -93,11 +87,26 @@ const ApparelDetailPage = () => {
             </button>
           </>
         )}
-        <img
-          src={apparel.pictures[currentImageIndex]}
-          alt={apparel.name}
-          className="product-image"
-        />
+        <div
+          className="image-zoom-container"
+          onMouseMove={handleZoom}
+          onMouseLeave={handleZoomOut}
+        >
+          <img
+            src={apparel.pictures[currentImageIndex]}
+            alt={apparel.name}
+            className="product-image"
+          />
+          {zoomPosition.show && (
+            <div
+              className="zoom-box"
+              style={{
+                backgroundImage: `url(${apparel.pictures[currentImageIndex]})`,
+                backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+              }}
+            ></div>
+          )}
+        </div>
       </div>
 
       <div className="product-info">

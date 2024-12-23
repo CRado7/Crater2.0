@@ -41,7 +41,6 @@ const AdminDashboard = () => {
           <div className="stats-card">
             <h3>Total Site Visitors</h3>
             <p>Total Views: {stats.totalViews ?? 'Data not available'}</p>
-            <p>Unique Visits: {stats.uniqueVisits ?? 'Data not available'}</p>
           </div>
         </div>
   
