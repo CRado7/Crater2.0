@@ -137,6 +137,25 @@ export const GET_SITE_STATS = gql`
     getSiteStats {
       totalViews
       uniqueVisits
+      monthlyStats {
+        year
+        month
+        totalViews
+        uniqueVisits
+      }
+    }
+  }
+`;
+
+export const GET_MONTHLY_STATS = gql`
+  query GetMonthlyStats {
+    getSiteStats {
+      monthlyStats {
+        year
+        month
+        totalViews
+        uniqueVisits
+      }
     }
   }
 `;
@@ -148,10 +167,6 @@ export const GET_SNOWBOARD_STATS = gql`
         name
         views
       }
-      salesData {
-        month
-        total
-      }
     }
   }
 `;
@@ -162,10 +177,6 @@ export const GET_APPAREL_STATS = gql`
       mostViewedApparel {
         name
         views
-      }
-      salesData {
-        month
-        total
       }
     }
   }

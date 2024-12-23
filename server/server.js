@@ -41,14 +41,22 @@ const ensureSessionId = (req, res, next) => {
 const trackVisits = async (req, res, next) => {
   try {
     console.log('Session ID:', req.sessionID);
+    
     // Execute a mutation to increment stats
     await execute({
       schema,
       document: `
-        mutation {
+        mutation IncrementSiteStats {
           incrementSiteStats {
             totalViews
             uniqueVisits
+            monthlyStats {
+              year
+              month
+              totalViews
+              uniqueVisits
+              uniqueSessions
+            }
           }
         }
       `,

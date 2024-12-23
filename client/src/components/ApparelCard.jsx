@@ -13,7 +13,7 @@ const ApparelCard = ({ apparel }) => {
     <div className="product-card" onClick={handleCardClick}>
       <div className="product-image-container">
         <img
-          src={apparel.picture} // Image URL for the apparel item
+          src={apparel.pictures[0]} // Image URL for the apparel item
           alt={apparel.name} // Name as alt text for image
           className="product-image"
         />

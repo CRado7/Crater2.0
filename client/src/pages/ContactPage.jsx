@@ -30,15 +30,19 @@ export default function Contact() {
                     <p>
                         We love hearing from you. 
                         <br /><br />
-                        If you are or want to become a distributor or are already one and need more goods, hit the link below to get in touch with our sales team (cant miss it).
+                        If you want to become a distributor or already are one and need more goods, hit the link below to get in touch with our sales team (cant miss it).
                         <br /><br />
                         Are you a rider looking to get sponsored? Submit your video through the link below so we can see what you got.
-                        <br />
-                        Looking to have your rad art plastered all over our boards next season? Submit that sh*t here too.
-                        <br />
-                        Just want to leave a comment? Use form because we love to hear you raging about out boards.
+                        <br /><br />
+                        Looking to have your rad art plastered all over our boards next season? <br />Download the template below and then upload your art
+                        <br /><br />
+                        Just want to leave a comment? <br />Use form because we love to hear you raging about out boards.
                     </p>
-                    <button>The Distributor Link</button>         
+                    <div className="contact-buttons">
+                        <button>Distributor Link</button>
+                        <button>Get Sponsored</button>
+                        <button>Art Submision</button>
+                    </div>        
                 </div>
 
                 <form className="contact-form" onSubmit={handleSubmit}>

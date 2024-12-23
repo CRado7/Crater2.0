@@ -4,7 +4,6 @@ import { GET_ALL_SNOWBOARDS } from '../../utils/queries'; // Adjust path as need
 import { DELETE_SNOWBOARD } from '../../utils/mutations'; // Adjust path as needed
 import DeleteSnowboardForm from '../admin/delete/DeleteSnowboardForm'; // Adjust path as needed
 import UpdateSnowboardForm from '../admin/update/UpdateSnowboardForm'; // Adjust path as needed
-import '../../styles/ProductCard.css'; // Import styles
 
 const AdminSnowboardCard = () => {
   const { loading, error, data } = useQuery(GET_ALL_SNOWBOARDS);
@@ -34,13 +33,13 @@ const AdminSnowboardCard = () => {
   };
 
   return (
-    <div className="snowboard-cards-container">
+    <div className="product-grid">
       {data.getAllSnowboards.map((snowboard) => (
-        <div key={snowboard._id} className="snowboard-card">
+        <div key={snowboard._id} className="product-card">
           <img
             src={snowboard.pictures[0]}
             alt={snowboard.name}
-            className="snowboard-picture"
+            className="product-image"
           />
           <h3>{snowboard.name}</h3>
 
@@ -57,9 +56,10 @@ const AdminSnowboardCard = () => {
           <h3>${snowboard.price}</h3>
           <p>Featured: {snowboard.featured ? "Yes" : "No"}</p>
 
-          {/* Buttons to trigger delete and update popups */}
-          <button onClick={() => setShowDeletePopup(snowboard)}>Delete</button>
-          <button onClick={() => setShowUpdatePopup(snowboard)}>Update Board</button>
+          <div className="delete-update">
+            <button onClick={() => setShowDeletePopup(snowboard)}>Delete</button>
+            <button onClick={() => setShowUpdatePopup(snowboard)}>Update Board</button>
+          </div>
         </div>
       ))}
 
@@ -77,8 +77,7 @@ const AdminSnowboardCard = () => {
         <UpdateSnowboardForm
           item={showUpdatePopup}
           onUpdate={(updatedSizes) => {
-            // Implement your update functionality here
-            setShowUpdatePopup(null); // Close popup after updating
+            setShowUpdatePopup(null);
           }}
           onClose={() => setShowUpdatePopup(null)}
         />

@@ -65,6 +65,15 @@ const typeDefs = gql`
   type SiteStats {
     totalViews: Int!
     uniqueVisits: Int!
+    monthlyStats: [MonthlyStats!]!
+  }
+
+  type MonthlyStats {
+    year: Int!
+    month: Int!
+    totalViews: Int!
+    uniqueVisits: Int!
+    uniqueSessions: [String!]!
   }
 
   type MonthlyVisitorData {
@@ -72,20 +81,12 @@ const typeDefs = gql`
     count: Int!
   }
 
-  type SalesData {
-    month: String!
-    itemType: String!
-    total: Float!
-  }
-
   type SnowboardStats {
     mostViewedBoard: Snowboard
-    salesData: [SalesData!]!
   }
 
   type ApparelStats {
     mostViewedApparel: Apparel
-    salesData: [SalesData!]!
   }
 
   type Query {
@@ -102,7 +103,7 @@ const typeDefs = gql`
 
     snowboardStats: SnowboardStats!
     apparelStats: ApparelStats!
-    
+
     topApparelByViews(limit: Int): [Apparel]
     topSnowboardByViews(limit: Int): [Snowboard]
 
@@ -114,7 +115,7 @@ const typeDefs = gql`
     createUser(username: String!, password: String!): User!
     login(username: String!, password: String!): Auth
     logout: String!
-    
+
     createSnowboard(
       pictures: [String!], 
       name: String!, 
@@ -122,65 +123,72 @@ const typeDefs = gql`
       sizes: [SnowboardSizeInput!]!, 
       flex: String!, 
       boardConstruction: String!, 
-      price: Float!
+      price: Float!,
       featured: Boolean
-      ): Snowboard!
-      
-      createApparel(
-        pictures: [String!]!,
-        name: String!,
-        style: String!, 
-        sizes: [ApparelSizeInput!]!, 
-        price: Float!
-        featured: Boolean
-        ): Apparel!
-        
-      addToCart(input: AddToCartInput!): Cart
-      removeFromCart(input: RemoveFromCartInput!): Cart
-      
-      updateSnowboard(id: ID!, input: [SnowboardSizeInput!]!, featured: Boolean): Snowboard
-      updateApparel(id: ID!, input: [ApparelSizeInput!]!, featured: Boolean): Apparel
-      updateCartQuantity(input: UpdateCartQuantityInput!): Cart
-      
-      deleteSnowboard(id: ID!): Snowboard
-      deleteApparel(id: ID!): Apparel
-        
-      incrementApparelViews(_id: ID!): Apparel
-      incrementSnowboardViews(_id: ID!): Snowboard
-      incrementSiteStats: SiteStats!
-    }
+    ): Snowboard!
 
-
-    input SnowboardSizeInput {
-      size: String!
-      inStock: Int!
+    createApparel(
+      pictures: [String!]!,
+      name: String!,
+      style: String!, 
+      sizes: [ApparelSizeInput!]!, 
+      price: Float!,
       featured: Boolean
-    }
+    ): Apparel!
 
-    input ApparelSizeInput {
-      size: String!
-      inStock: Int!
-    }
+    addToCart(input: AddToCartInput!): Cart
+    removeFromCart(input: RemoveFromCartInput!): Cart
 
-    input AddToCartInput {
-      productId: ID!
-      quantity: Int!
-      name: String!
-      size: String!
-      type: String!
-      picture: String!
-      price: Float!
-    }
+    updateSnowboard(
+      id: ID!,
+      input: [SnowboardSizeInput!]!,
+      featured: Boolean
+    ): Snowboard
 
-    input UpdateCartQuantityInput {
-      productId: ID!
-      quantity: Int!
-    }
-  
-    input RemoveFromCartInput {
-      productId: ID!
-    }
-    
+    updateApparel(
+      id: ID!,
+      input: [ApparelSizeInput!]!,
+      featured: Boolean
+    ): Apparel
+
+    updateCartQuantity(input: UpdateCartQuantityInput!): Cart
+
+    deleteSnowboard(id: ID!): Snowboard
+    deleteApparel(id: ID!): Apparel
+
+    incrementApparelViews(_id: ID!): Apparel
+    incrementSnowboardViews(_id: ID!): Snowboard
+    incrementSiteStats: SiteStats!
+  }
+
+  input SnowboardSizeInput {
+    size: String!
+    inStock: Int!
+  }
+
+  input ApparelSizeInput {
+    size: String!
+    inStock: Int!
+  }
+
+  input AddToCartInput {
+    productId: ID!
+    quantity: Int!
+    name: String!
+    size: String!
+    type: String!
+    picture: String!
+    price: Float!
+  }
+
+  input UpdateCartQuantityInput {
+    productId: ID!
+    quantity: Int!
+  }
+
+  input RemoveFromCartInput {
+    productId: ID!
+  }
 `;
 
 module.exports = typeDefs;

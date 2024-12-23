@@ -8,23 +8,23 @@ const SiteStatsIncrementer = () => {
 
   useEffect(() => {
     const incrementStats = async () => {
-      // Check if a session ID exists in cookies
       const sessionId = Cookies.get('session_id');
-
+      console.log('Session ID:', sessionId);
+  
       if (!sessionId) {
         try {
-          // If no session ID exists, trigger the mutation
-          await incrementSiteStats();
-          
-          // Store a session ID in cookies to track this session
-          const newSessionId = Math.random().toString(36).substr(2, 9); // Create a random session ID
-          Cookies.set('session_id', newSessionId, { expires: 1 }); // Save the session ID in cookies for 1 day
+          const { data } = await incrementSiteStats();
+          console.log('Increment site stats response:', data);
+  
+          const newSessionId = Math.random().toString(36).substr(2, 9); // Generate random session ID
+          Cookies.set('session_id', newSessionId, { expires: 1 });
         } catch (err) {
-          console.error('Failed to increment site stats:', err);
+          console.error('Failed to increment site stats:', err.message);
+          console.error('Error details:', err);
         }
       }
     };
-
+  
     incrementStats();
   }, [incrementSiteStats]);
 

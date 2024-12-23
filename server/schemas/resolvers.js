@@ -96,26 +96,36 @@ const resolvers = {
     // General stats for the site (authenticated)
     async getSiteStats() {
       let stats = await SiteStats.findOne();
+    
+      // If stats don't exist, create a new document with initial values
       if (!stats) {
-        stats = await SiteStats.create({ totalViews: 0, uniqueVisits: 0 });
+        stats = await SiteStats.create({
+          totalViews: 0,
+          uniqueVisits: 0,
+          monthlyStats: [] // Initialize empty monthlyStats array
+        });
       }
+    
+      // If monthlyStats is not present or empty, initialize it
+      if (!stats.monthlyStats || stats.monthlyStats.length === 0) {
+        stats.monthlyStats = [];
+      }
+    
       return stats;
     },
 
     // Snowboard-specific stats (authenticated)
     snowboardStats: async () => {
       const mostViewedBoard = await Snowboard.findOne().sort({ views: -1 }).limit(1);
-      const salesData = await Sales.find({ itemType: "snowboard" });
 
-      return { mostViewedBoard, salesData };
+      return { mostViewedBoard };
     },
 
     // Apparel-specific stats (authenticated)
     apparelStats: async () => {
       const mostViewedApparel = await Apparel.findOne().sort({ views: -1 }).limit(1);
-      const salesData = await Sales.find({ itemType: "apparel" });
 
-      return { mostViewedApparel, salesData };
+      return { mostViewedApparel };
     },
   },
 
@@ -338,35 +348,84 @@ const resolvers = {
       }
     },
         // Increment total views and unique visits
-      async incrementSiteStats(_, __, context) {
-        const sessionId = context.session.id; // Use the session ID from the context
-        if (!sessionId) {
-          throw new Error('Session ID not found.');
-        }
-  
-        // Fetch the stats document
-        let stats = await SiteStats.findOne();
-        if (!stats) {
-          stats = await SiteStats.create({ totalViews: 0, uniqueVisits: 0, uniqueSessions: [] });
-        }
-  
-        // Increment total views
-        stats.totalViews += 1;
-  
-        // Check if the session is new
-        if (!stats.uniqueSessions.includes(sessionId)) {
-          stats.uniqueSessions.push(sessionId);
-          stats.uniqueVisits += 1; // Increment unique visits for a new session
-        }
-  
-        // Save the updated stats
-        await stats.save();
-  
-        return {
-          totalViews: stats.totalViews,
-          uniqueVisits: stats.uniqueVisits,
-        };
-      },
+        async incrementSiteStats(_, __, context) {
+          const sessionId = context.sessionID; // Use the session ID from the context
+          if (!sessionId) {
+            throw new Error('Session ID not found.');
+          }
+        
+          // Fetch the stats document
+          let stats = await SiteStats.findOne();
+          console.log('SiteStats document before update:', stats); // Log the current stats document
+        
+          if (!stats) {
+            stats = await SiteStats.create({
+              totalViews: 0,
+              uniqueVisits: 0,
+              uniqueSessions: [], // Initialize uniqueSessions as an empty array
+              monthlyStats: [],
+            });
+            console.log('New SiteStats document created:', stats);
+          }
+        
+          // Increment total views
+          stats.totalViews += 1;
+        
+          // Ensure uniqueSessions is initialized
+          if (!stats.uniqueSessions) stats.uniqueSessions = [];
+        
+          // Check if the session is new for the global unique sessions
+          if (!stats.uniqueSessions.includes(sessionId)) {
+            stats.uniqueSessions.push(sessionId);
+            stats.uniqueVisits += 1; // Increment unique visits for a new session
+          }
+        
+          // Get the current month and year
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+        
+          // Find or create the monthly stats for the current month and year
+          let monthlyStat = stats.monthlyStats.find(
+            (stat) => stat.year === currentYear && stat.month === currentMonth
+          );
+        
+          console.log('MonthlyStat before update:', monthlyStat); // Log the monthlyStat
+        
+          if (!monthlyStat) {
+            // If no monthly stats exist for this month, create it
+            monthlyStat = {
+              year: currentYear,
+              month: currentMonth,
+              totalViews: 1,
+              uniqueVisits: 1,
+              uniqueSessions: [sessionId],
+            };
+            stats.monthlyStats.push(monthlyStat);
+          } else {
+            // Ensure uniqueSessions is initialized
+            if (!monthlyStat.uniqueSessions) monthlyStat.uniqueSessions = [];
+        
+            // Increment total views for the current month
+            monthlyStat.totalViews++;
+        
+            // Check if the session is unique for this month and increment accordingly
+            if (!monthlyStat.uniqueSessions.includes(sessionId)) {
+              monthlyStat.uniqueVisits++;
+              monthlyStat.uniqueSessions.push(sessionId);
+            }
+          }
+        
+          // Save the updated stats
+          await stats.save();
+        
+          console.log('SiteStats document after update:', stats); // Log the updated stats document
+        
+          return {
+            totalViews: stats.totalViews,
+            uniqueVisits: stats.uniqueVisits,
+            monthlyStats: stats.monthlyStats,
+          };
+        },        
     
     // Login mutation to authenticate user and return JWT token
     login: async (parent, { username, password }) => {

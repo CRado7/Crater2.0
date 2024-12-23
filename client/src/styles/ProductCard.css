@@ -30,9 +30,9 @@
     color: #333;
   }
 
-  .product-details p, .specs-container p {
+  .product-details p {
     font-family: "Regular";
-    font-size: 1.5em;
+    font-size: 18px;
     color: #333;
   }
 

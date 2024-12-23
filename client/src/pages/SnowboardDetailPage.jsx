@@ -72,6 +72,19 @@ const SnowboardDetailPage = () => {
       console.error('Error adding to cart:', error);
     }
   };
+
+  const getFlexBarWidth = (flex) => {
+    switch (flex) {
+      case 'soft':
+        return '25%'; // Unfilled
+      case 'medium':
+        return '60%'; // Half-filled
+      case 'stiff':
+        return '90%'; // Fully filled
+      default:
+        return '0%'; // Default if flex is not provided
+    }
+  };
   
 
   if (loading) return <div>Loading...</div>;
@@ -101,13 +114,23 @@ const SnowboardDetailPage = () => {
 
       <div className="product-info">
         <h1>{snowboard.name}</h1>
+        <p>{snowboard.shape} | {snowboard.boardConstruction}</p>
+          <div className="flex-bar-container">
+            <div
+              className="flex-bar"
+              style={{ width: getFlexBarWidth(snowboard?.flex) }}
+            />
+          </div>
+          <div className="flex-labels">
+            <span>Soft</span>
+            <span>Medium</span>
+            <span>Stiff</span>
+          </div>
         <p className="product-price">${snowboard.price}</p>
-        <p>Shape: {snowboard.shape}</p>
-        <p>Flex: {snowboard.flex}</p>
-        <p>Construction: {snowboard.boardConstruction}</p>
 
         {/* Quantity and Size Selection */}
         <div className="quantity">
+          <label htmlFor="quantity">Quantity: </label>
           <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
           <span>{quantity}</span>
           <button onClick={() => setQuantity(quantity + 1)}>+</button>

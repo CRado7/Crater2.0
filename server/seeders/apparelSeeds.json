@@ -1,8 +1,8 @@
 [
   {
     "pictures": [
-      "https://example.com/images/apparel1.jpg",
-      "https://example.com/images/apparel1-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629772/Mountain-Explorer-Hoodie-01_zitrmp.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629773/Mountain-Explorer-Hoodie-02_ngouhb.png"
     ],
     "name": "Mountain Explorer Hoodie",
     "style": "Hoodie",
@@ -37,8 +37,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel2.jpg",
-      "https://example.com/images/apparel2-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629767/Snowboarder-Tshirt_udu6cd.png"
     ],
     "name": "Snowboarder T-Shirt",
     "style": "T-Shirt",
@@ -73,8 +72,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel3.jpg",
-      "https://example.com/images/apparel3-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629771/Adventurer-Hoodie_o0c3re.png"
     ],
     "name": "Adventurer Hoodie",
     "style": "Hoodie",
@@ -109,8 +107,8 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel4.jpg",
-      "https://example.com/images/apparel4-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629768/AlpineRidge-Tshirt-01_oy89ss.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629767/AlpineRidge-Tshirt-02_bkqqir.png"
     ],
     "name": "Alpine Ridge T-Shirt",
     "style": "T-Shirt",
@@ -145,8 +143,8 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel5.jpg",
-      "https://example.com/images/apparel5-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629768/SunsetAdventure-Hoodie-01_plu2du.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629770/SunsetAdventure-Hoodie-02_yb0cir.png"
     ],
     "name": "Sunset Adventure Hoodie",
     "style": "Hoodie",
@@ -181,8 +179,8 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel6.jpg",
-      "https://example.com/images/apparel6-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629763/WinterWinds-Tshirt-01_x1vqww.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629763/WinterWinds-Tshirt-02_aajyu8.png"
     ],
     "name": "Winter Winds T-Shirt",
     "style": "T-Shirt",
@@ -217,8 +215,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel7.jpg",
-      "https://example.com/images/apparel7-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629769/Trailblazer-Hoodie_tnntkj.png"
     ],
     "name": "Trailblazer Hoodie",
     "style": "Hoodie",
@@ -253,12 +250,16 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel8.jpg",
-      "https://example.com/images/apparel8-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629765/Snowfall-Tshirt-01_racllj.png",
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629764/Snowfall-Tshirt-02_yzsoiz.png"
     ],
     "name": "Snowfall T-Shirt",
     "style": "T-Shirt",
     "sizes": [
+      {
+        "size": "XS",
+        "inStock": 0
+      },
       {
         "size": "S",
         "inStock": 12
@@ -270,6 +271,9 @@
       {
         "size": "XL",
         "inStock": 10
+      }, {
+        "size": "XXL",
+        "inStock": 5
       }
     ],
     "price": 27.99,
@@ -277,23 +281,34 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel9.jpg",
-      "https://example.com/images/apparel9-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629770/IcePeak-Hoodie_fabkg9.png"
     ],
     "name": "Ice Peak Hoodie",
     "style": "Hoodie",
     "sizes": [
       {
-        "size": "S",
+        "size": "XS",
         "inStock": 0
       },
       {
+        "size": "S",
+        "inStock": 5
+      },
+      {
         "size": "M",
-        "inStock": 10
+        "inStock": 0
       },
       {
         "size": "L",
-        "inStock": 7
+        "inStock": 10
+      },
+      {
+        "size": "XL",
+        "inStock": 20
+      },
+      {
+        "size": "XXL",
+        "inStock": 15
       }
     ],
     "price": 54.99,
@@ -301,8 +316,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel10.jpg",
-      "https://example.com/images/apparel10-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629764/SummitView-Tshirts_sz1xwl.png"
     ],
     "name": "Summit View T-Shirt",
     "style": "T-Shirt",
@@ -337,8 +351,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel11.jpg",
-      "https://example.com/images/apparel11-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629773/EverestExpedition-Hoodie_zghemt.png"
     ],
     "name": "Everest Expedition Hoodie",
     "style": "Hoodie",
@@ -373,8 +386,7 @@
   },
   {
     "pictures": [
-      "https://example.com/images/apparel12.jpg",
-      "https://example.com/images/apparel12-alt.jpg"
+      "https://res.cloudinary.com/dwp2h5cak/image/upload/v1734629766/AlpineHiker-Tshirt_letmyl.png"
     ],
     "name": "Alpine Hiker T-Shirt",
     "style": "T-Shirt",

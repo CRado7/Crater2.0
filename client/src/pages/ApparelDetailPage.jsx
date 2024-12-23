@@ -101,9 +101,9 @@ const ApparelDetailPage = () => {
       </div>
 
       <div className="product-info">
-        <p>{apparel.style}</p>
         <h1>{apparel.name}</h1>
         <p className="product-price">${apparel.price}</p>
+
 
         {/* Add quantity selection */}
         <div className="quantity">

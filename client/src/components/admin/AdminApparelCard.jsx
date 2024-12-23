@@ -4,7 +4,6 @@ import { GET_ALL_APPAREL } from '../../utils/queries'; // Adjust path as needed
 import { DELETE_APPAREL } from '../../utils/mutations'; // Adjust path as needed
 import DeleteApparelForm from '../admin/delete/DeleteApparelForm'; // Adjust path as needed
 import UpdateApparelForm from '../admin/update/UpdateApparelForm'; // Adjust path as needed
-import '../../styles/ProductCard.css'; // Import styles
 
 const AdminApparelCard = React.memo(() => {
   const { loading, error, data } = useQuery(GET_ALL_APPAREL);
@@ -35,13 +34,13 @@ const AdminApparelCard = React.memo(() => {
   };
 
   return (
-    <div className="apparel-cards-container">
+    <div className="product-grid">
       {data.getAllApparel.map((apparel) => (
-        <div key={apparel._id} className="apparel-card">
+        <div key={apparel._id} className="product-card">
           <img
             src={apparel.pictures[0]} // Assuming the first picture is the main image
             alt={apparel.name}
-            className="apparel-picture"
+            className="product-image"
           />
           <h3>{apparel.name}</h3>
 
@@ -58,9 +57,10 @@ const AdminApparelCard = React.memo(() => {
           <h3>${apparel.price}</h3>
           <p>Featured: {apparel.featured ? "Yes" : "No"}</p>
 
-          {/* Buttons to trigger delete and update popups */}
-          <button onClick={() => setShowDeletePopup(apparel)}>Delete</button>
-          <button onClick={() => setShowUpdatePopup(apparel)}>Update Item</button>
+          <div className="delete-update">
+            <button onClick={() => setShowDeletePopup(apparel)}>Delete</button>
+            <button onClick={() => setShowUpdatePopup(apparel)}>Update Item</button>
+          </div>
         </div>
       ))}
 

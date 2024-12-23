@@ -31,6 +31,7 @@
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
+    will-change: transform;
 }
 
 .tagline {
@@ -41,7 +42,7 @@
 .hero h1 {
     font-family: "Regular";
     font-size: 1.5em;
-    color: #232323;
+    color: #333;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 6px;
@@ -50,7 +51,7 @@
 h1 {
     font-family: "Bold";
     font-size: 2em;
-    color: #232323;
+    color: #333;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 6px;
@@ -59,7 +60,7 @@ h1 {
 h2 {
     font-family: "Regular";
     font-size: 1.5em;
-    color: #232323;
+    color: #333;
     text-transform: uppercase;
     letter-spacing: 6px;
 }

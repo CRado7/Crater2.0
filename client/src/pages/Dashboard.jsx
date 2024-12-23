@@ -7,6 +7,7 @@ import AdminSnowboardCard from '../components/admin/AdminSnowboardCard';
 import AdminApparelCard from '../components/admin/AdminApparelCard';
 import AddSnowboardForm from '../components/admin/add/AddSnowboardForm';
 import AddApparelForm from '../components/admin/add/AddApparelForm';
+import '../styles/Dashboard.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -28,10 +29,10 @@ const AdminDashboard = () => {
 
   const renderSiteStats = () => {
     if (!generalData) return <p>Loading general stats...</p>;
-
+  
     const stats = generalData.getSiteStats;
     if (!stats) return <p>No stats available.</p>;
-
+  
     return (
       <div>
         <h2>General Stats</h2>
@@ -39,14 +40,38 @@ const AdminDashboard = () => {
           {/* Card 1: Total Visitors */}
           <div className="stats-card">
             <h3>Total Site Visitors</h3>
-            <p>{stats.totalViews ?? 'Data not available'}</p>
+            <p>Total Views: {stats.totalViews ?? 'Data not available'}</p>
+            <p>Unique Visits: {stats.uniqueVisits ?? 'Data not available'}</p>
           </div>
-
-          {/* Card 2: Unique Visits */}
-          <div className="stats-card">
-            <h3>Unique Visits</h3>
-            <p>{stats.uniqueVisits ?? 'Data not available'}</p>
-          </div>
+        </div>
+  
+        {/* Monthly Stats Section */}
+        <div className="monthly-stats-section">
+          <h3>Monthly Stats</h3>
+          {stats.monthlyStats && stats.monthlyStats.length > 0 ? (
+            <table className="stats-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Month</th>
+                  <th>Total Views</th>
+                  <th>Unique Visits</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.monthlyStats.map((monthStat, index) => (
+                  <tr key={index}>
+                    <td>{monthStat.year}</td>
+                    <td>{new Date(0, monthStat.month).toLocaleString('default', { month: 'long' })}</td>
+                    <td>{monthStat.totalViews}</td>
+                    <td>{monthStat.uniqueVisits}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No monthly stats available.</p>
+          )}
         </div>
       </div>
     );
@@ -54,9 +79,9 @@ const AdminDashboard = () => {
 
   const renderSnowboardStats = () => (
     <div>
-      <div>
-        <h2>Snowboard Stats</h2>
+      <div className="viewed-section">
         <h3>Most Viewed Board</h3>
+      <div className="most-viewed">
         {topSnowboardData && topSnowboardData.topSnowboardByViews && topSnowboardData.topSnowboardByViews.length > 0 ? (
           <div>
             {topSnowboardData.topSnowboardByViews[0].pictures &&
@@ -73,11 +98,12 @@ const AdminDashboard = () => {
           </div>
         ) : (
           <p>Loading top board...</p>
-        )}
+          )}
+      </div>
       </div>
 
+        <button className="add" onClick={handleAddBoardClick}>Add A New Board</button>
       <div className="cards">
-        <button onClick={handleAddBoardClick}>Add A New Board</button>
 
         {/* Show the AddSnowboardForm component when showForm is true */}
         {showForm && <AddSnowboardForm closeForm={closeForm} />}
@@ -88,15 +114,14 @@ const AdminDashboard = () => {
 
   const renderApparelStats = () => (
     <div>
-      <div>
-        <h2>Apparel Stats</h2>
+      <div className="viewed-section">
         <h3>Top 3 Most Viewed Items</h3>
         {topApparelData ? (
-          <ul>
+          <ul className="most-viewed">
             {topApparelData.topApparelByViews.map((item) => (
               <li key={item._id}>
                 <img src={item.pictures[0]} alt={item.name} style={{ width: '50px' }} />
-                <p>Name: {item.name}</p>
+                <p>{item.name}</p>
                 <p>Views: {item.views}</p>
                 <p>Price: ${item.price}</p>
               </li>
@@ -107,8 +132,8 @@ const AdminDashboard = () => {
         )}
       </div>
 
+      <button className="add" onClick={handleAddBoardClick}>Add New Apparel</button>
       <div className="cards">
-        <button onClick={handleAddBoardClick}>Add New Apparel</button>
 
         {/* Show the AddApparelForm component when showForm is true */}
         {showForm && <AddApparelForm closeForm={closeForm} />}

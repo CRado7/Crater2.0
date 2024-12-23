@@ -5,13 +5,15 @@
     flex-wrap: wrap; */
     align-items: top;
     /* background-color: #f9f9f9; */
-    font-family: "Regular";
+
     letter-spacing: 1px;
-    text-transform: uppercase;
+
     padding: 50px 0 0 0;
 }
 
 h2 {
+    font-family: "Regular";
+    text-transform: uppercase;
     text-align: center;
     color: #232323;
 }
@@ -40,7 +42,7 @@ h2 {
 }
 
 .message p {
-    font-size: 12px;
+    font-size: 18px;
 }
 
 .form-group {

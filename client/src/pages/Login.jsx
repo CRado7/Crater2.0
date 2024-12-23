@@ -1,72 +1,67 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import { LOGIN } from '../utils/mutations';  // Import the login mutation
+import { LOGIN } from '../utils/mutations'; // Import the login mutation
 import AuthService from '../utils/auth';
 
-console.log("Login mutation:", LOGIN);
+import '../styles/Login.css'; // Ensure your styles are imported
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // State for styled error message
   const navigate = useNavigate();
 
-  // Use the login mutation
-  const [login, { error, data }] = useMutation(LOGIN);
+  const [login] = useMutation(LOGIN);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
-    console.log("Starting handleLogin");  // Logs start of function
-    console.log("Username:", username);
-    console.log("Password:", password);
-  
+    setErrorMessage(''); // Clear previous errors
+
     try {
       const { data } = await login({
         variables: { username, password },
       });
-      
-      console.log('Login mutation response data:', data);  // Logs after mutation is called
-  
+
       if (data?.login?.token) {
-        console.log('Token received:', data.login.token);
         AuthService.login(data.login.token);
         navigate('/dashboard');
       } else {
-        console.warn('No token returned from login mutation');
+        setErrorMessage('No token returned from server. Please try again.');
       }
     } catch (err) {
-      console.error('Error during login mutation:', err);  // Logs error details
-      if (err.networkError) {
-        console.error('Network error details:', err.networkError);
+      console.error('Login error:', err);
+      if (err.graphQLErrors?.length) {
+        setErrorMessage(err.graphQLErrors[0].message);
+      } else if (err.networkError) {
+        setErrorMessage('Network error: Please check your connection.');
+      } else {
+        setErrorMessage('Login failed. Please try again.');
       }
-      if (err.graphQLErrors) {
-        console.error('GraphQL error details:', err.graphQLErrors);
-      }
-      alert('Login failed: Please check your credentials or try again later.');
     }
   };
-  
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="input"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Login</button>
-      {error && <p>Error logging in: {error.message}</p>}
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleLogin} className="login-form">
+        <input
+          type="input"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Login</button>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+      </form>
+    </div>
   );
 };
 

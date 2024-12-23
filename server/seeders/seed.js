@@ -1,5 +1,5 @@
 const db = require('../config/connection');
-const { User, Apparel, Snowboard, Cart } = require('../models');
+const { User, Apparel, Snowboard, Cart, SiteStats } = require('../models');
 const userSeeds = require('./userSeeds.json');
 const apparelSeeds = require('./apparelSeeds.json');
 const snowboardSeeds = require('./snowboardsSeeds.json');
@@ -12,6 +12,7 @@ db.once('open', async () => {
     await cleanDB('Apparel', 'apparel');
     await cleanDB('Snowboard', 'snowboards');
     await cleanDB('Cart', 'carts');
+    await cleanDB('SiteStats', 'sitestats');
 
     // Seed User data
     await User.create(userSeeds);

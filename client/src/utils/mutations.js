@@ -176,11 +176,19 @@ export const INCREMENT_SNOWBOARD_VIEWS = gql`
   }
 `;
 
+// Updated mutation for Incrementing Site Stats to include monthly stats
 export const INCREMENT_SITE_STATS = gql`
   mutation IncrementSiteStats {
     incrementSiteStats {
       totalViews
       uniqueVisits
+      monthlyStats {
+        year
+        month
+        totalViews
+        uniqueVisits
+        uniqueSessions
+      }
     }
   }
 `;
@@ -228,9 +236,3 @@ export const UPDATE_CART_QUANTITY = gql`
     }
   }
 `;
-
-
-
-
-
-

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { CREATE_SNOWBOARD } from "../../../utils/mutations"; // Adjust the path
+import { CREATE_SNOWBOARD } from "../../../utils/mutations"; // Adjust the path if needed
+import CloudinaryUploader from "../../CloudinaryUploader"; // Import CloudinaryUploader
+import "../../../styles/AddForm.css"; 
 
 const AddSnowboardForm = ({ closeForm }) => {
   const [newBoard, setNewBoard] = useState({
@@ -16,10 +18,12 @@ const AddSnowboardForm = ({ closeForm }) => {
 
   const [createSnowboard] = useMutation(CREATE_SNOWBOARD);
 
+  // Options for the select fields
   const shapes = ["twin", "directional-twin", "directional", "directional-powder"];
   const flexTypes = ["soft", "medium", "stiff"];
   const boardConstructions = ["traditional", "hybrid", "rocker", "camber"];
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -37,14 +41,12 @@ const AddSnowboardForm = ({ closeForm }) => {
     }
   };
 
-  const handlePicturesChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewBoard({
-      ...newBoard,
-      pictures: files.map((file) => URL.createObjectURL(file)),
-    });
+  // Handle picture uploads from CloudinaryUploader
+  const handleCloudinaryUpload = (urls) => {
+    setNewBoard({ ...newBoard, pictures: urls });
   };
 
+  // Add new size-stock pair to the sizes array
   const handleAddSizeStock = () => {
     setNewBoard({
       ...newBoard,
@@ -52,11 +54,13 @@ const AddSnowboardForm = ({ closeForm }) => {
     });
   };
 
+  // Remove a size-stock pair from the sizes array
   const handleRemoveSizeStock = (index) => {
     const updatedSizes = newBoard.sizes.filter((_, i) => i !== index);
     setNewBoard({ ...newBoard, sizes: updatedSizes });
   };
 
+  // Submit form to create snowboard
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -76,7 +80,8 @@ const AddSnowboardForm = ({ closeForm }) => {
           featured: newBoard.featured === "Yes",
         },
       });
-      closeForm();
+
+      closeForm(); // Close the form after submitting
       setNewBoard({
         pictures: [],
         name: "",
@@ -86,7 +91,7 @@ const AddSnowboardForm = ({ closeForm }) => {
         boardConstruction: "",
         price: "",
         featured: "No",
-      });
+      }); // Reset form fields
     } catch (error) {
       console.error("Error creating snowboard:", error);
     }
@@ -97,18 +102,9 @@ const AddSnowboardForm = ({ closeForm }) => {
       <div className="popup-content">
         <h2>Add New Snowboard</h2>
         <form onSubmit={handleSubmit}>
+          {/* Snowboard Name */}
           <div>
-            <label>Pictures (Upload multiple files):</label>
-            <input
-              type="file"
-              name="pictures"
-              accept="image/*"
-              multiple
-              onChange={handlePicturesChange}
-            />
-          </div>
-          <div>
-            <label>Name:</label>
+            <label>Snowboard Name:</label>
             <input
               type="text"
               name="name"
@@ -117,6 +113,19 @@ const AddSnowboardForm = ({ closeForm }) => {
               placeholder="Enter snowboard name"
             />
           </div>
+
+          {/* Cloudinary Image Upload */}
+          <div>
+            <label>Upload Pictures:</label>
+            <CloudinaryUploader
+              uploadPreset="my_unsigned_preset" // Replace with your Cloudinary preset
+              cloudName="dwp2h5cak" // Replace with your Cloudinary cloud name
+              folderPath="Crater2.0/snowboards" // Folder path for the images
+              onUploadComplete={handleCloudinaryUpload}
+            />
+          </div>
+
+          {/* Snowboard Shape */}
           <div>
             <label>Shape:</label>
             <select name="shape" value={newBoard.shape} onChange={handleChange}>
@@ -128,6 +137,8 @@ const AddSnowboardForm = ({ closeForm }) => {
               ))}
             </select>
           </div>
+
+          {/* Flex Type */}
           <div>
             <label>Flex:</label>
             <select name="flex" value={newBoard.flex} onChange={handleChange}>
@@ -139,6 +150,8 @@ const AddSnowboardForm = ({ closeForm }) => {
               ))}
             </select>
           </div>
+
+          {/* Board Construction */}
           <div>
             <label>Board Construction:</label>
             <select
@@ -154,6 +167,8 @@ const AddSnowboardForm = ({ closeForm }) => {
               ))}
             </select>
           </div>
+
+          {/* Price */}
           <div>
             <label>Price:</label>
             <input
@@ -166,6 +181,8 @@ const AddSnowboardForm = ({ closeForm }) => {
               placeholder="Enter price"
             />
           </div>
+
+          {/* Sizes and Stock */}
           <div>
             <h4>Sizes and Stock:</h4>
             {newBoard.sizes.map((sizeStock, index) => (
@@ -194,6 +211,8 @@ const AddSnowboardForm = ({ closeForm }) => {
               Add Size/Stock
             </button>
           </div>
+
+          {/* Featured */}
           <div>
             <label>Featured:</label>
             <select
@@ -205,7 +224,9 @@ const AddSnowboardForm = ({ closeForm }) => {
               <option value="Yes">Yes</option>
             </select>
           </div>
-          <button type="submit">Submit</button>
+
+          {/* Submit and Cancel Buttons */}
+          <button type="submit">Add Snowboard</button>
           <button type="button" onClick={closeForm}>
             Cancel
           </button>

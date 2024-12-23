@@ -13,6 +13,7 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import Cookies from 'js-cookie';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3001/graphql', // Make sure the URL is correct
@@ -21,10 +22,12 @@ const httpLink = createHttpLink({
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
+  const sessionId = Cookies.get('sessionId');
   const token = localStorage.getItem('id_token');
   return {
     headers: {
       ...headers,
+      'session-id': sessionId || '',
       authorization: token ? `Bearer ${token}` : '',
     },
   };

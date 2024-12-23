@@ -1,0 +1,55 @@
+.add {
+    display: flex;
+    margin: auto;
+    margin-bottom: 2rem;
+}
+
+.viewed-section h3{
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 2rem;
+}
+
+.most-viewed {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+li {
+    list-style: none;
+}
+
+.delete-update {
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete-update button {
+    padding: 0.5rem;
+    border: none;
+    width: 49%;
+    cursor: pointer;
+}
+
+h3 {
+    font-size: large;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .stats-table th,
+  .stats-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .stats-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
