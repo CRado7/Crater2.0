@@ -34,8 +34,7 @@ const AdminDashboard = () => {
     if (!stats) return <p>No stats available.</p>;
   
     return (
-      <div>
-        <h2>General Stats</h2>
+      <div className="viewed-section">
         <div className="stats-cards">
           {/* Card 1: Total Visitors */}
           <div className="stats-card">
@@ -82,13 +81,12 @@ const AdminDashboard = () => {
         <h3>Most Viewed Board</h3>
       <div className="most-viewed">
         {topSnowboardData && topSnowboardData.topSnowboardByViews && topSnowboardData.topSnowboardByViews.length > 0 ? (
-          <div>
+          <div className="most-viewed-item">
             {topSnowboardData.topSnowboardByViews[0].pictures &&
               topSnowboardData.topSnowboardByViews[0].pictures.length > 0 && (
                 <img
                   src={topSnowboardData.topSnowboardByViews[0].pictures[0]}
                   alt={topSnowboardData.topSnowboardByViews[0].name}
-                  style={{ width: '50px' }}
                 />
               )}
             <p>Name: {topSnowboardData.topSnowboardByViews[0].name}</p>
@@ -118,8 +116,8 @@ const AdminDashboard = () => {
         {topApparelData ? (
           <ul className="most-viewed">
             {topApparelData.topApparelByViews.map((item) => (
-              <li key={item._id}>
-                <img src={item.pictures[0]} alt={item.name} style={{ width: '50px' }} />
+              <li key={item._id} className="most-viewed-item">
+                <img src={item.pictures[0]} alt={item.name} />
                 <p>{item.name}</p>
                 <p>Views: {item.views}</p>
                 <p>Price: ${item.price}</p>
@@ -147,10 +145,26 @@ const AdminDashboard = () => {
 
       {/* Tab Navigation */}
       <div className="tab-buttons">
-        <button onClick={() => setActiveTab('general')}>General</button>
-        <button onClick={() => setActiveTab('snowboards')}>Snowboards</button>
-        <button onClick={() => setActiveTab('apparel')}>Apparel</button>
+        <button
+          onClick={() => setActiveTab('general')}
+          className={activeTab === 'general' ? 'active' : ''}
+        >
+          General
+        </button>
+        <button
+          onClick={() => setActiveTab('snowboards')}
+          className={activeTab === 'snowboards' ? 'active' : ''}
+        >
+          Snowboards
+        </button>
+        <button
+          onClick={() => setActiveTab('apparel')}
+          className={activeTab === 'apparel' ? 'active' : ''}
+        >
+          Apparel
+        </button>
       </div>
+
 
       {/* Tab Content */}
       <div className="tab-content">

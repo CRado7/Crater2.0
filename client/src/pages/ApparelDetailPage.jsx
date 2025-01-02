@@ -92,6 +92,7 @@ const ApparelDetailPage = () => {
           onMouseMove={handleZoom}
           onMouseLeave={handleZoomOut}
         >
+          <h1 className="mobile-heading">{apparel.name}</h1>
           <img
             src={apparel.pictures[currentImageIndex]}
             alt={apparel.name}
@@ -110,12 +111,13 @@ const ApparelDetailPage = () => {
       </div>
 
       <div className="product-info">
-        <h1>{apparel.name}</h1>
+        <h1 className="desktop-heading">{apparel.name}</h1>
         <p className="product-price">${apparel.price}</p>
 
 
         {/* Add quantity selection */}
         <div className="quantity">
+          <label htmlFor="quantity">Quantity:</label>
           <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
           <span>{quantity}</span>
           <button onClick={() => setQuantity(quantity + 1)}>+</button>

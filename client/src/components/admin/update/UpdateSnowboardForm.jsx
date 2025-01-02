@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { UPDATE_SNOWBOARD } from '../../../utils/mutations'; // Adjust the path if necessary
 import SuccessPopup from '../../SuccessPopup';
+import '../../../styles/UpdateStockPopup.css';
 
 const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
   const [sizes, setSizes] = useState(item.sizes);
@@ -55,15 +56,16 @@ const UpdateSnowboardForm = ({ item, onUpdate, onClose }) => {
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <h2>UUpdate Stock and Featured Status for {item.name}</h2>
+        <h2>Update Stock and Featured Status for {item.name}</h2>
         <ul>
           {sizes.map((size, index) => (
-            <li key={index}>
-              <span>{size.size}:</span>
+            <li key={index} className="size-stock-item">
+              <label>{size.size}:</label>
               <input
                 type="number"
                 value={size.inStock}
                 onChange={(e) => handleSizeChange(index, parseInt(e.target.value))}
+                min="0"
               />
             </li>
           ))}

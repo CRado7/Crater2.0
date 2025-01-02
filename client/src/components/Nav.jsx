@@ -43,7 +43,7 @@ export default function Nav() {
 
         <div className="nav-right">
           <div className="search-bar">
-            <input type="text" placeholder="Search" />
+            <input type="text" placeholder="For Display Only" />
             <span className="search-icon"><img src={searchIcon} alt="search-icon" /></span>
           </div>
         </div>

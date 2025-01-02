@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: crater2
+    env: node
+    buildCommand: npm install && npm run build  # Install dependencies and build frontend
+    startCommand: npm run develop  # Start both frontend and backend concurrently
+    plan: free
+    region: virginia  # or any region you prefer
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        value: "mongodb+srv://christopherferraro34:Lakewood84@cluster0.yoqo2y2.mongodb.net/Crater2?retryWrites=true&w=majority"
+      - key: PORT
+        value: "3000"  # Use the backend's port here

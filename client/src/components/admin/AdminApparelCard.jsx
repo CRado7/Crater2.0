@@ -47,13 +47,20 @@ const AdminApparelCard = React.memo(() => {
           <div className="sizes-container">
             <ul>
               {apparel.sizes.map((size, index) => (
-                <li key={index} className="size-item">
+                <li
+                  key={index}
+                  className="size-item"
+                  style={{
+                    color: size.inStock < 5 ? 'red' : 'inherit', // Apply to both size and quantity
+                  }}
+                >
                   <span>{size.size}: </span>
-                  <span className="size-stock">{size.inStock || 0}</span>
+                  <span>{size.inStock || 0}</span>
                 </li>
               ))}
             </ul>
           </div>
+
           <h3>${apparel.price}</h3>
           <p>Featured: {apparel.featured ? "Yes" : "No"}</p>
 

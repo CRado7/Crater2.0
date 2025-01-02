@@ -24,19 +24,20 @@ export default function Contact() {
 
     return (
         <div className="contact-page">
+            <h1 className="red">*This page is for display only*</h1>
             <div className="contact-container">
                 <div className="message">
-                    <h2>Tell us what you have to say!</h2>
+                    <h1>Tell us what you have to say!</h1>
                     <p>
-                        We love hearing from you. 
-                        <br /><br />
+                        <b>We love hearing from you.</b>
+                        <br />
                         If you want to become a distributor or already are one and need more goods, hit the link below to get in touch with our sales team (cant miss it).
                         <br /><br />
-                        Are you a rider looking to get sponsored? Submit your video through the link below so we can see what you got.
+                        <b>Are you a rider looking to get sponsored?</b><br />Submit your video through the link below so we can see what you got.
                         <br /><br />
-                        Looking to have your rad art plastered all over our boards next season? <br />Download the template below and then upload your art
+                        <b>Looking to have your rad art plastered all over our boards next season?</b><br />Download the template below and then upload your art
                         <br /><br />
-                        Just want to leave a comment? <br />Use form because we love to hear you raging about out boards.
+                        <b>Just want to leave a comment?</b><br />Use form because we love to hear you raging about out boards.
                     </p>
                     <div className="contact-buttons">
                         <button>Distributor Link</button>
@@ -46,6 +47,7 @@ export default function Contact() {
                 </div>
 
                 <form className="contact-form" onSubmit={handleSubmit}>
+                    <h1>Contact Form</h1>
                     <div className="form-group">
                         <label htmlFor="name">Name:</label>
                         <input 

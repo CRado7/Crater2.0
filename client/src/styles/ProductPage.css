@@ -1,16 +1,12 @@
 .product-page {
     width: 100%;
-}
+} 
 
 .product-grid {
     display: flex;
+    justify-content: space-evenly;
     flex-wrap: wrap;
-    justify-content: center;
-}
-
-.product-name {
-    text-align: center;
-}
+  }  
 
 h1 {
     font-family: "Bold";

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ProductCard.css';
 
-const SnowboardCard = ({ snowboard }) => {
+const SnowboardCard = ({ snowboard, className = '' }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -14,7 +14,7 @@ const SnowboardCard = ({ snowboard }) => {
   }, [snowboard]);
 
   return (
-    <div className="product-card" onClick={handleCardClick}>
+    <div className={ `product-card ${className}`} onClick={handleCardClick}>
       <div className="product-image-container">
         {snowboard?.pictures && (
           <img
@@ -24,7 +24,7 @@ const SnowboardCard = ({ snowboard }) => {
           />
         )}
       </div>
-      <div className="product-details">
+      <div className="product-card-details">
         <h1 className="product-name">{snowboard?.name}</h1>
           <p className="price">${snowboard?.price || 'N/A'}</p>
       </div>

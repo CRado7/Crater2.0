@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Use this instead of useHistory
 import '../styles/ProductCard.css';
 
-const ApparelCard = ({ apparel }) => {
+const ApparelCard = ({ apparel, className = '' }) => {
   const navigate = useNavigate(); // This replaces useHistory
 
   const handleCardClick = () => {
@@ -10,7 +10,7 @@ const ApparelCard = ({ apparel }) => {
   };
 
   return (
-    <div className="product-card" onClick={handleCardClick}>
+    <div className={ `product-card ${className}`} onClick={handleCardClick}>
       <div className="product-image-container">
         <img
           src={apparel.pictures[0]} // Image URL for the apparel item

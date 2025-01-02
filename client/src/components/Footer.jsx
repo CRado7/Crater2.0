@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Facebook from '../assets/facebook.svg';
+import Instagram from '../assets/instagram.svg';
+import X from '../assets/x.svg';
 import '../styles/Footer.css';
 
 export default function Footer() {
@@ -17,7 +20,6 @@ export default function Footer() {
                         <Link to="/"><li>Home</li></Link>
                         <Link to="/snowboards"><li>Snowboards</li></Link>
                         <Link to="/apparel"><li>Apparel</li></Link>
-                        <li><a href="#about">About Us</a></li>
                         <Link to="/contact"><li>Contact</li></Link>
                     </ul>
                 </div>
@@ -27,9 +29,9 @@ export default function Footer() {
                     <p>Email: info@cratersnowboards.com</p>
                     <p>Phone: +1 (555) 123-4567</p>
                     <div className="socials">
-                        <a href="#"><img src="path/to/facebook-icon.png" alt="Facebook" /></a>
-                        <a href="#"><img src="path/to/instagram-icon.png" alt="Instagram" /></a>
-                        <a href="#"><img src="path/to/twitter-icon.png" alt="Twitter" /></a>
+                        <a href="#"><img src={Facebook} alt="Facebook" /></a>
+                        <a href="#"><img src={Instagram} alt="Instagram" /></a>
+                        <a href="#"><img src={X} alt="Twitter" /></a>
                     </div>
                 </div>
             </div>

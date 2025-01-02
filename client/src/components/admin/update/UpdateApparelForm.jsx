@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { UPDATE_APPAREL } from '../../../utils/mutations'; // Adjust path as needed
 import SuccessPopup from '../../SuccessPopup'; // Import SuccessPopup component
+import '../../../styles/UpdateStockPopup.css';
 
 const UpdateStockPopup = ({ item, onUpdate, onClose }) => {
   const [stockUpdates, setStockUpdates] = useState(

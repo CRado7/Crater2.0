@@ -4,6 +4,11 @@
     margin-bottom: 2rem;
 }
 
+.viewed-section {
+    margin: 2rem auto;
+    padding: 1rem;
+}   
+
 .viewed-section h3{
     display: flex;
     justify-content: space-evenly;
@@ -13,6 +18,24 @@
 .most-viewed {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.most-viewed-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 10px;
+    width: 300px;
+}
+
+.most-viewed-item img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 li {
@@ -51,5 +74,28 @@ h3 {
   .stats-table th {
     background-color: #f4f4f4;
     font-weight: bold;
+  }
+
+  .tab-buttons button {
+    padding: 0.5rem;
+    color: #333;
+    border-top: 3px solid #333;
+    border-right: 3px solid #333;
+    border-left: 3px solid #333;
+    border-bottom: none;
+    margin: 4px 4px 0 4px;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    background-color: #f4f4f4;
+  }
+
+    .tab-buttons button:hover {
+        background-color: #333;
+        color: #f4f4f4;
+    }
+
+  .tab-buttons button.active {
+    background-color: #333;
+    color: #f4f4f4;
   }
   

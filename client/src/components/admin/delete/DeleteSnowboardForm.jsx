@@ -19,10 +19,14 @@ const DeleteSnowboardForm = ({ itemName, onDelete, onClose }) => {
           onChange={(e) => setInput(e.target.value)}
           placeholder={`Type ${itemName}`}
         />
-        <button onClick={handleDelete} disabled={input !== itemName}>
+        <button 
+          onClick={handleDelete} 
+          disabled={input !== itemName}
+          className="delete-button"
+          >
           Delete
         </button>
-        <button onClick={onClose}>Cancel</button>
+        <button onClick={onClose} className="cancel-button">Cancel</button>
       </div>
     </div>
   );

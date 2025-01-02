@@ -1,10 +1,11 @@
 /* General page styling */
 .product-details-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-    margin-top: 50px;
+    margin: 50px 0 100px 0;
     flex-wrap: wrap;
+
 }
 
 .image-container {
@@ -17,6 +18,10 @@
     width: 100%;
     max-height: 500px;
     object-fit: cover;
+}
+
+.mobile-heading {
+    display: none;
 }
 
 .nav-button {
@@ -46,23 +51,35 @@
 }
 
 .product-info {
-    max-width: 500px;
+    width: 320px;
     text-transform: capitalize;
 }
 
 .product-info h1 {
     text-align: left;
+    font-size: 32px;
 }
 
 .product-price {
-    font-size: 20px;
-    color: #333;
+    font-size: 18px;
+    font-weight: 550;
+    color: #434343;
     margin-top: 10px;
+}
+
+.quantity label {
+    font-weight: 550;
+    color: #434343;
 }
 
 .quantity button{
     color: #333;
     background-color: transparent;
+}
+
+.quantity button:hover {
+    background-color: transparent;
+    color: #333;
 }
 
 .image-zoom-container {
@@ -78,11 +95,13 @@
   
   .zoom-box {
     position: absolute;
-    width: 320px;
-    height: 450px;
+    width: 365px;
+    height: 500px;
     border: 2px solid #000;
+    border-radius: 5px;
     background-repeat: no-repeat;
     background-size: 300%;
+    background-color: rgb(245 245, 245);
     pointer-events: none;
     z-index: 10;
     transform: translate(-50%, -50%);
@@ -91,7 +110,7 @@
   }
   
 
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
     .product-details-container {
         flex-direction: column;
         align-items: center;
@@ -99,19 +118,31 @@
     .image-container {
         margin-right: 0;
     }
+    .mobile-heading {
+        display: block;
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+    .desktop-heading {
+        display: none;
+    }
+    .zoom-box {
+        display: none;
+    }
 }
 
 /*Size Buttons*/
 .size-buttons {
     display: flex;
-    gap: 10px;
+    gap: 5px;
     flex-wrap: wrap;
-    margin: 20px 0;
+    margin: 0 0 30px 0;
+    width: 280px;
 }
 
 .size-button {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 2px solid rgb(255, 119, 0);
     background-color: transparent;
@@ -119,7 +150,8 @@
     text-align: center; 
     line-height: 0;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
+    padding: 0;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -130,9 +162,40 @@
     cursor: not-allowed;
 }
 
+.size-button.out-of-stock {
+    position: relative; /* Ensures the ::before element is positioned relative to the button */
+}
+
+.size-button.out-of-stock:hover::before {
+    content: 'Out of Stock';
+    position: absolute;
+    bottom: 110%; /* Positions the tooltip above the button */
+    left: 50%; /* Centers the tooltip horizontally */
+    transform: translateX(-50%); /* Adjusts centering */
+    color: #333; /* Text color */
+    padding: 5px 10px; /* Adds padding for the tooltip */
+    border-radius: 5px; /* Rounds the corners of the tooltip */
+    white-space: nowrap; /* Prevents the tooltip from wrapping */
+    z-index: 10; /* Ensures the tooltip appears above other elements */
+    opacity: 0; /* Makes the tooltip invisible initially */
+    transition: opacity 0.3s ease; /* Smooth transition for appearing/disappearing */
+    pointer-events: none; /* Ensures it doesn't block hover interactions */
+}
+
+.size-button.out-of-stock:hover::before {
+    opacity: 1; /* Makes the tooltip visible on hover */
+}
+
 .size-button.selected {
     background-color: rgb(255, 119, 0); /* Highlight color */
     color: white;
+}
+
+@media (max-width: 900px)
+{
+    .size-buttons {
+        width: 100%;
+    }
 }
 
 /* Add to Cart Button */

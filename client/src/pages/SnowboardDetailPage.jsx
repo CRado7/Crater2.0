@@ -12,6 +12,7 @@ const SnowboardDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState('');
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0, show: false });
   const [incrementSnowboardViews] = useMutation(INCREMENT_SNOWBOARD_VIEWS);
   const [addToCart] = useMutation(ADD_TO_CART); // Use the ADD_TO_CART mutation
 
@@ -34,6 +35,20 @@ const SnowboardDetailPage = () => {
         return (prevIndex - 1 + data.getSnowboard.pictures.length) % data.getSnowboard.pictures.length;
       }
     });
+  };
+
+  const handleZoom = (e) => {
+    const { offsetX, offsetY, target } = e.nativeEvent;
+    const { offsetWidth, offsetHeight } = target;
+
+    const x = (offsetX / offsetWidth) * 100;
+    const y = (offsetY / offsetHeight) * 100;
+
+    setZoomPosition({ x, y, show: true });
+  };
+
+  const handleZoomOut = () => {
+    setZoomPosition({ ...zoomPosition, show: false });
   };
 
   // Handle add to cart with mutation
@@ -105,15 +120,31 @@ const SnowboardDetailPage = () => {
             </button>
           </>
         )}
+        <div
+          className="image-zoom-container"
+          onMouseMove={handleZoom}
+          onMouseLeave={handleZoomOut}
+        >
+        <h1 className="mobile-heading">{snowboard.name}</h1>
         <img
           src={snowboard.pictures[currentImageIndex]}
           alt={snowboard.name}
           className="product-image"
         />
+        {zoomPosition.show && (
+            <div
+              className="zoom-box"
+              style={{
+                backgroundImage: `url(${snowboard.pictures[currentImageIndex]})`,
+                backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+              }}
+            ></div>
+          )}
+        </div>
       </div>
 
       <div className="product-info">
-        <h1>{snowboard.name}</h1>
+        <h1 className="desktop-heading">{snowboard.name}</h1>
         <p>{snowboard.shape} | {snowboard.boardConstruction}</p>
           <div className="flex-bar-container">
             <div
@@ -138,7 +169,6 @@ const SnowboardDetailPage = () => {
 
         {/* Size Selection */}
         <div className="size-selection">
-          <label htmlFor="size">Size: </label>
           <div className="size-buttons">
             {snowboard.sizes.map((sizeOption, index) => (
               <button
