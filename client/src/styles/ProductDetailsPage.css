@@ -101,7 +101,7 @@
     border-radius: 5px;
     background-repeat: no-repeat;
     background-size: 300%;
-    background-color: rgb(245 245, 245);
+    background-color: rgb(245, 245, 245);
     pointer-events: none;
     z-index: 10;
     transform: translate(-50%, -50%);
