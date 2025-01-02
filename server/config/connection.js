@@ -1,20 +1,16 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/Crater2', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const uri = process.env.MONGODB_URI || 'mongodb+srv://christopherferraro34:Lakewood84@cluster0.yoqo2y2.mongodb.net/Crater2?retryWrites=true&w=majority';
+console.log('MongoDB URI:', uri);
 
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to MongoDB');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('Mongoose connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected');
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
+    console.log('Connected to MongoDB Atlas');
+}).catch((err) => {
+    console.error('Error connecting to MongoDB Atlas:', err.message);
 });
 
 module.exports = mongoose.connection;
