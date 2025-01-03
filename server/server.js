@@ -12,6 +12,8 @@ const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
 const uuid = require('uuid');
 const MongoStore = require('connect-mongo');
+require('dotenv').config();
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
