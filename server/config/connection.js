@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/Crater2';
+const uri = process.env.MONGODB_URI || 'mongodb+srv://christopherferraro34:Lakewood84@cluster0.yoqo2y2.mongodb.net/Crater2?retryWrites=true&w=majority';
 console.log('MongoDB URI:', uri);
 
 mongoose.connect(uri, {
