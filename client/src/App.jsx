@@ -1,11 +1,10 @@
 import './App.css';
 import React from 'react';
-
 import Nav from './components/Nav';
-import Footer from './components/Footer'
+import Footer from './components/Footer';
 import SiteStatsIncrementer from './components/SiteStatsIncrementer';
-
 import { Outlet } from 'react-router-dom';
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -15,31 +14,32 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
 
+// Ensure the backend URL and CORS setup match correctly
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql', // Make sure the URL is correct
-  credentials: 'include',
+  uri: 'http://localhost:3001/graphql',
+  credentials: 'include',  // ✅ Ensures cookies are sent with the request
 });
 
-// Construct request middleware that will attach the JWT token to every request as an `authorization` header
+// ✅ Attaches both the sessionId and auth token properly
 const authLink = setContext((_, { headers }) => {
-  const sessionId = Cookies.get('sessionId');
+  const sessionId = Cookies.get('sessionId'); 
   const token = localStorage.getItem('id_token');
   return {
     headers: {
       ...headers,
-      'session-id': sessionId || '',
+      'sessionId': sessionId || '',  // Ensure this matches backend expectations
       authorization: token ? `Bearer ${token}` : '',
     },
   };
 });
 
+// ✅ Apply the link properly in order
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
 function App() {
-
   return (
     <ApolloProvider client={client}>
       <Nav />
