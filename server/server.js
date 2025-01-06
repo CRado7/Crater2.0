@@ -14,20 +14,25 @@ const uuid = require('uuid');
 const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 // CORS Configuration for Production on Render
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'sessionId'],
-    methods: ['GET', 'POST', 'OPTIONS'],
-    preflightContinue: false, // Ensure the preflight is properly handled
-    optionsSuccessStatus: 204, // Return success status for preflight requests
-  })
-);
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'https://crater2-0.onrender.com'
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+          callback(null, true);
+      } else {
+          callback(new Error('CORS policy violation'));
+      }
+  },
+  credentials: true
+}));
 
 // Preflight request support
 // app.options('*', cors());

@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 
 // Ensure the backend URL and CORS setup match correctly
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: 'http://localhost:3000/graphql',
   credentials: 'include',  // ✅ Ensures cookies are sent with the request
 });
 
