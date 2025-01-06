@@ -37,6 +37,7 @@ const authLink = setContext((_, { headers }) => {
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
+  credentials: 'include',  // ✅ Ensures cookies are sent with the request
 });
 
 function App() {
