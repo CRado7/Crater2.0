@@ -54,32 +54,30 @@ const startApolloServer = async () => {
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'your-secret-key',
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-      }),
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-      },
+        secret: process.env.SESSION_SECRET || 'your-secret-key',
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGODB_URI,
+        }),
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',  // Only secure in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        },
     })
-  );
+);
 
+// REMOVE MANUAL res.cookie SETTING - express-session handles it
   app.use((req, res, next) => {
-    if (!req.session.sessionID) {
-      req.session.sessionID = uuid.v4();
-      res.cookie('sessionId', req.session.sessionID, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-      });
-    }
-    next();
+      if (!req.session.sessionID) {
+          req.session.sessionID = uuid.v4();
+          req.session.save();  // Ensure the session is properly saved
+      }
+      next();
   });
+
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
