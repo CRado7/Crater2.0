@@ -7,31 +7,39 @@ require('dotenv').config();  // Ensure environment variables are loaded
 
 const resolvers = {
   Query: {
-    getCart: async (_, __, { sessionID }) => {
-      const cart = await Cart.findOne({ sessionId: sessionID });
-    
-      if (!cart) {
-        return { id: null, sessionId: sessionID, items: [] };
+    getCart: async (_, __, context) => {
+      if (!context.sessionID) {
+          throw new Error("Session ID is missing from the context.");
       }
-    
+
+      console.log("Session ID in getCart:", context.sessionID);
+
+      const cart = await Cart.findOne({ sessionId: context.sessionID });
+      
+      if (!cart) {
+          return { id: null, sessionId: context.sessionID, items: [] };
+      }
+
+      // Populate product details
       await Promise.all(
-        cart.items.map(async (item) => {
-          try {
-            // Normalize the type to PascalCase (e.g., "Snowboard")
-            const ProductModel = mongoose.model(item.type.charAt(0).toUpperCase() + item.type.slice(1));
-            const product = await ProductModel.findById(item.productId);
-    
-            if (product) {
-              item.name = product.name || item.name;
-              item.picture = product.picture || item.picture;
-              item.price = product.price || item.price;
-            }
-          } catch (err) {
-            console.error(`Error fetching product for type: ${item.type}, productId: ${item.productId}`, err);
-          }
-        })
+          cart.items.map(async (item) => {
+              try {
+                  const ProductModel = mongoose.model(
+                      item.type.charAt(0).toUpperCase() + item.type.slice(1)
+                  );
+                  const product = await ProductModel.findById(item.productId);
+
+                  if (product) {
+                      item.name = product.name || item.name;
+                      item.picture = product.picture || item.picture;
+                      item.price = product.price || item.price;
+                  }
+              } catch (err) {
+                  console.error(`Error fetching product for type: ${item.type}`, err);
+              }
+          })
       );
-    
+
       return cart;
     },
 
@@ -130,22 +138,30 @@ const resolvers = {
   },
 
   Mutation: {
-    addToCart: async (_, { input }, { sessionID }) => {
+    addToCart: async (_, { input }, context) => {
+      if (!context.sessionID) {
+          throw new Error("Session ID is missing from the context.");
+      }
+
+      console.log("Session ID in addToCart:", context.sessionID);
+
       const { productId, quantity, name, size, type, picture, price } = input;
-    
-      let cart = await Cart.findOne({ sessionId: sessionID });
+
+      let cart = await Cart.findOne({ sessionId: context.sessionID });
       if (!cart) {
-        cart = new Cart({ sessionId: sessionID, items: [] });
+          cart = new Cart({ sessionId: context.sessionID, items: [] });
       }
-    
-      const existingItemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
-    
+
+      const existingItemIndex = cart.items.findIndex(item => 
+          item.productId.toString() === productId
+      );
+
       if (existingItemIndex > -1) {
-        cart.items[existingItemIndex].quantity += quantity;
+          cart.items[existingItemIndex].quantity += quantity;
       } else {
-        cart.items.push({ productId, quantity, name, size, type, picture, price });
+          cart.items.push({ productId, quantity, name, size, type, picture, price });
       }
-    
+
       await cart.save();
       return cart;
     },

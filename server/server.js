@@ -85,10 +85,20 @@ const startApolloServer = async () => {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: ({ req }) => ({
-        sessionID: req.session.sessionID,
-      }),
-    })
+        context: async ({ req }) => {
+            // Ensure the sessionID is consistently attached
+            if (!req.session.sessionID) {
+                req.session.sessionID = uuid.v4();
+                res.cookie('sessionId', req.session.sessionID, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+                });
+            }
+            console.log('Session ID:', req.session.sessionID);
+            return { sessionID: req.session.sessionID };
+          }
+      })
   );
 
   if (process.env.NODE_ENV === 'production') {
