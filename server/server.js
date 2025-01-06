@@ -17,6 +17,13 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URI,
+  collectionName: 'sessions',  // Customize if needed
+});
+
+app.set('trust proxy', 1);
+
 // CORS Configuration for Production on Render
 const allowedOrigins = [
   'http://localhost:5173', 
@@ -57,9 +64,7 @@ const startApolloServer = async () => {
         secret: process.env.SESSION_SECRET || 'your-secret-key',
         resave: false,
         saveUninitialized: false,
-        store: MongoStore.create({
-            mongoUrl: process.env.MONGODB_URI,
-        }),
+        store: sessionStore,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24, // 1 day
             httpOnly: true,
