@@ -34,22 +34,22 @@ app.set('trust proxy', 1);
 
 // CORS Configuration for Production on Render
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://crater2-0.onrender.com/', // Ensure this matches your Render deployment URL
+  'http://localhost:5173', // Local development
+  'https://crater2-0.onrender.com', // Production frontend
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow undefined origins (e.g., server-to-server calls) and whitelisted origins
       if (!origin || allowedOrigins.includes(origin)) {
-        // Allow undefined origins (e.g., server-to-server requests)
         callback(null, true);
       } else {
-        console.error('Blocked by CORS:', origin); // Log the blocked origin
+        console.error(`Blocked by CORS: ${origin}`); // Log blocked origins
         callback(new Error('CORS policy violation'));
       }
     },
-    credentials: true, // Ensure cookies and session data are sent
+    credentials: true, // Allow cookies and credentials
   })
 );
 
