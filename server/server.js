@@ -19,30 +19,39 @@ const app = express();
 
 const sessionStore = MongoStore.create({
   mongoUrl: process.env.MONGODB_URI,
-  collectionName: 'sessions',  // Customize if needed
+  collectionName: 'sessions',
+});
+
+// Monitor session store connection
+sessionStore.on('connected', () => {
+  console.log('✅ Session store connected successfully!');
+});
+sessionStore.on('error', (err) => {
+  console.error('❌ Session store error:', err);
 });
 
 app.set('trust proxy', 1);
 
 // CORS Configuration for Production on Render
 const allowedOrigins = [
-  'http://localhost:5173', 
-  'https://crater2-0.onrender.com'
+  'http://localhost:5173',
+  'https://crater2-0.onrender.com', // Ensure this matches your Render deployment URL
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log('Incoming origin:', origin); // Log incoming origins for debugging
       if (allowedOrigins.includes(origin) || !origin) {
-          callback(null, true);
+        callback(null, true);
       } else {
-          callback(new Error('CORS policy violation'));
+        console.error('Blocked by CORS:', origin);
+        callback(new Error('CORS policy violation'));
       }
-  },
-  credentials: true
-}));
-
-// Preflight request support
-// app.options('*', cors());
+    },
+    credentials: true,
+  })
+);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
@@ -61,28 +70,26 @@ const startApolloServer = async () => {
 
   app.use(
     session({
-        secret: process.env.SESSION_SECRET || 'your-secret-key',
-        resave: false,
-        saveUninitialized: false,
-        store: sessionStore,
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',  // Only secure in production
-            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-        },
+      secret: process.env.SESSION_SECRET || 'your-secret-key',
+      resave: false,
+      saveUninitialized: false,
+      store: sessionStore,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Only secure in production
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      },
     })
-);
+  );
 
-// REMOVE MANUAL res.cookie SETTING - express-session handles it
   app.use((req, res, next) => {
-      if (!req.session.sessionID) {
-          req.session.sessionID = uuid.v4();
-          req.session.save();  // Ensure the session is properly saved
-      }
-      next();
+    if (!req.session.sessionID) {
+      req.session.sessionID = uuid.v4();
+      req.session.save(); // Ensure the session is properly saved
+    }
+    next();
   });
-
 
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
@@ -90,20 +97,14 @@ const startApolloServer = async () => {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-        context: async ({ req }) => {
-            // Ensure the sessionID is consistently attached
-            if (!req.session.sessionID) {
-                req.session.sessionID = uuid.v4();
-                res.cookie('sessionId', req.session.sessionID, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-                });
-            }
-            console.log('Session ID:', req.session.sessionID);
-            return { sessionID: req.session.sessionID };
-          }
-      })
+      context: async ({ req }) => {
+        if (!req.session.sessionID) {
+          req.session.sessionID = uuid.v4();
+        }
+        console.log('Session ID:', req.session.sessionID);
+        return { sessionID: req.session.sessionID };
+      },
+    })
   );
 
   if (process.env.NODE_ENV === 'production') {
@@ -113,15 +114,18 @@ const startApolloServer = async () => {
     });
   }
 
+  // Add logs for database connection debugging
   db.once('open', () => {
     console.log('✅ Connected to MongoDB Atlas successfully!');
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}/graphql`);
+      console.log(`Environment: ${process.env.NODE_ENV}`);
     });
   });
 
   db.on('error', (err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err.message);
+    console.error('Ensure your MongoDB URI is correct and accessible.');
   });
 };
 
