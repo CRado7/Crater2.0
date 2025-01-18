@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 
 // Ensure the backend URL and CORS setup match correctly
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: import.meta.env.VITE_API_URL || 'http://localhost:3000/graphql',  // Use env variable
   credentials: 'include',  // ✅ Ensures cookies are sent with the request
 });
 
