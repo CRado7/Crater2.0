@@ -7,7 +7,11 @@
 .viewed-section {
     margin: 2rem auto;
     padding: 1rem;
-}   
+}
+
+.general {
+    height: 70vh;
+}
 
 .viewed-section h3{
     display: flex;

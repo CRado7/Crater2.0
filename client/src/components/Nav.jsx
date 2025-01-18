@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import navLogo from '../assets/navLogo.svg';
 import searchIcon from '../assets/searchIcon.svg';
@@ -8,12 +8,24 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   const closeMenu = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    // Toggle the 'no-scroll' class on the body based on isOpen
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+
+    // Cleanup function to ensure no class is left behind
+    return () => document.body.classList.remove('no-scroll');
+  }, [isOpen]);
 
   return (
     <>

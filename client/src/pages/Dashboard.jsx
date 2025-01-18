@@ -34,7 +34,7 @@ const AdminDashboard = () => {
     if (!stats) return <p>No stats available.</p>;
   
     return (
-      <div className="viewed-section">
+      <div className="viewed-section general">
         <div className="stats-cards">
           {/* Card 1: Total Visitors */}
           <div className="stats-card">

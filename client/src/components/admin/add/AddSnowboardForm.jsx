@@ -186,23 +186,25 @@ const AddSnowboardForm = ({ closeForm }) => {
           <div>
             <h4>Sizes and Stock:</h4>
             {newBoard.sizes.map((sizeStock, index) => (
-              <div key={index}>
-                <input
-                  type="text"
-                  name={`size_${index}`}
-                  value={sizeStock.size}
-                  onChange={handleChange}
-                  placeholder="Size"
-                />
-                <input
-                  type="number"
-                  name={`stock_${index}`}
-                  value={sizeStock.inStock || 0}
-                  onChange={handleChange}
-                  placeholder="Stock"
-                  min="0"
-                />
-                <button type="button" onClick={() => handleRemoveSizeStock(index)}>
+              <div key={index} className="size-stock-container">
+                <div className="size-stock-field">
+                  <input
+                    type="text"
+                    name={`size_${index}`}
+                    value={sizeStock.size}
+                    onChange={handleChange}
+                    placeholder="Size"
+                  />
+                  <input
+                    type="number"
+                    name={`stock_${index}`}
+                    value={sizeStock.inStock || 0}
+                    onChange={handleChange}
+                    placeholder="Stock"
+                    min="0"
+                  />
+                </div>
+                <button type="button" onClick={() => handleRemoveSizeStock(index)} className="remove">
                   Remove
                 </button>
               </div>
