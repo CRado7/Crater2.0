@@ -14,6 +14,8 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import Cookies from 'js-cookie';
 
+console.log('GraphQL API URL:', import.meta.env.VITE_API_URL);
+
 // Ensure the backend URL and CORS setup match correctly
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_API_URL || 'http://localhost:3000/graphql',  // Use env variable
