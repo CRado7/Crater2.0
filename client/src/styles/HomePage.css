@@ -76,7 +76,7 @@ p {
     animation: bounce 2s infinite;
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 440px) {
     p {
         font-size: 0.8em;
     }

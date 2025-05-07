@@ -163,13 +163,13 @@
 }
 
 .size-button.out-of-stock {
-    position: relative; /* Ensures the ::before element is positioned relative to the button */
+    position: relative; 
 }
 
 .size-button.out-of-stock:hover::before {
     content: 'Out of Stock';
     position: absolute;
-    bottom: 110%; /* Positions the tooltip above the button */
+    bottom: 110%; 
     left: 50%; /* Centers the tooltip horizontally */
     transform: translateX(-50%); /* Adjusts centering */
     color: #333; /* Text color */
